@@ -1,13 +1,18 @@
 import React from 'react';
 import './InicioSesion.css'
 
-const LoginPage = () => {
 
+const LoginPage = () => {
+  
   const handleRegistro = () => {
     window.location.href = "/registro"; // o tu ruta deseada
   };
 
+
+
+
   return (
+    
     <div >
       <header className='header'>
         <img src="/logo.png" alt="Logo" className='logo' />
@@ -19,17 +24,14 @@ const LoginPage = () => {
       </button></h2>
       <div className='form'>
         <h3>Rut Empresa</h3>
-        <textarea></textarea>
+        <input type="text" placeholder="Ingrese su RUT" />
         <h3>Contraseña</h3>
-        <textarea></textarea>
+        <input type="password" className='input' placeholder="Ingrese su contraseña" />
         <button className='password-link'>Olvide mi contraseña</button>
-        <button className='login-button'>Iniciar Sesión</button>
+        <button className='login-button' onClick={handleRegistro} >Iniciar Sesión</button>
       </div>
 
 
-      </div>
-      <div className='footer'>
-        
       </div>
     </div>
     
