@@ -62,7 +62,7 @@ const RegisterPage = () => {
                     <input type="text" name="telefono" placeholder="Teléfono" onChange={handleChange} />
                     <input type="text" name="direccion" placeholder="Dirección" onChange={handleChange} />
                     <input type="text" name="rut" placeholder="RUT" onChange={handleChange} />
-                    <input type="text" name="tipoPyme" placeholder="Tipo de Pyme" onChange={handleChange} />
+                    <input type="text" name="tipoPyme" placeholder="Nombre de la Pyme" onChange={handleChange} />
                 </div>
             </div>
             <div className="input-centro">

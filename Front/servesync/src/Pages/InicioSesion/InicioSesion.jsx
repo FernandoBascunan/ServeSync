@@ -7,6 +7,9 @@ const LoginPage = () => {
   const handleRegistro = () => {
     window.location.href = "/registro"; // o tu ruta deseada
   };
+  const handlePerfil = () => {
+    window.location.href = "/perfil"; // o tu ruta deseada
+  };
 
 
 
@@ -28,7 +31,7 @@ const LoginPage = () => {
         <h3>Contraseña</h3>
         <input type="password" className='input' placeholder="Ingrese su contraseña" />
         <button className='password-link'>Olvide mi contraseña</button>
-        <button className='login-button' onClick={handleRegistro} >Iniciar Sesión</button>
+        <button className='login-button' onClick={handlePerfil} >Iniciar Sesión</button>
       </div>
 
 

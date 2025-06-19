@@ -1,0 +1,17 @@
+.header{
+    
+
+}
+.header h1{
+    text-align: right;
+}
+.header image{
+    left:0%;
+}
+.header button{
+    background-color: transparent;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    
+}
