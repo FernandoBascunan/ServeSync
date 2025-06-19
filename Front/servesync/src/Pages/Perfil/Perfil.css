@@ -1,16 +1,27 @@
 
+.main-content {
+  display: flex;
+  height: 100vh;
+}
+
+/* Ya lo tienes, asegúrate de mantenerlo */
 .container {
   display: flex;
-  margin-top:0;
-  margin-left:0;
-  margin-bottom: 0;
-  border-radius:0 ;
-  width: 25%;
-  height: 82.2vh;
   flex-direction: column;
+  width: 25%;
+  height: 100vh;
+  margin: 0;
+  border-radius: 0;
 }
-.profile-image{
-    width: 40%;
+
+.containerRight {
+  width: 75%;
+  height: 100vh;
 }
+
+.profile-image {
+  width: 40%;
+}
+
 
 

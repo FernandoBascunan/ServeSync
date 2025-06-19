@@ -1,17 +1,22 @@
 .header{
     
-
 }
 .header h1{
     text-align: right;
+    margin-left: 6px;
 }
 .header image{
     left:0%;
 }
 .header button{
+    font-size: 25px;
+    margin-right: 15%;
     background-color: transparent;
     text-decoration: none;
     border: none;
     cursor: pointer;
-    
+}
+
+.logo{
+    margin-left:6%;
 }
