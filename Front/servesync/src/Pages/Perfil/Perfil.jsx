@@ -15,7 +15,7 @@ const profilePage = () => {
                 </div>
 
                 <div className='containerRight'>
-                    <h2>ajkshdajksdhkjasd</h2>
+                    <h2></h2>
                 </div>
             </div>
         </div>
