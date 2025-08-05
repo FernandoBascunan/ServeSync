@@ -22,7 +22,6 @@ const Header = () => {
             <button onClick={handleMesas}>Mesas</button>
             <button onClick={handlePedidos}>Pedidos</button>
             <img src="/logo.png" alt="Logo" className="logo" />
-            <h1>ServeSync</h1>
         </div>
 
     );

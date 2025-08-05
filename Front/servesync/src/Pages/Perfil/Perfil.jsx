@@ -9,7 +9,7 @@ const profilePage = () => {
         <div>
             <Header />
             <div className='main-content'>
-                <div className='container'>
+                <div className='containerPerfil'>
                     <div className='profile-card'>
                         <img src="/user.png" alt="User" className='profile-image' />
                         <h2 className='profile-name'>Nombre de la PYME</h2>
@@ -18,9 +18,9 @@ const profilePage = () => {
                         <h2 className='profile-email'>Email</h2>
                         <h2 className='profile-name'>Telefono</h2>
                     </div>
-                    <div>
-                        <button className='login-button'>Editar Perfil</button>
-                        <button className='login-button' onClick={handleLogin}>Cerrar Sesion</button>
+                    <div className='buttons'>
+                        <button className='perfilButton'>Editar Perfil</button>
+                        <button className='perfilButton' onClick={handleLogin}>Cerrar Sesion</button>
                     </div>
 
                 </div>
