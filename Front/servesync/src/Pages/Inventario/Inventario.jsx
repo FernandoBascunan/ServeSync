@@ -63,7 +63,6 @@ const StoragePage = () => {
         {/* Panel Derecho: Productos */}
         <div className='containerRight'>
           <div className='product-list'>
-            {/* Simulando algunos productos */}
             {[1, 2, 3, 4].map((i) => (
               <div className='product-card' key={i}>
                 <img src='https://via.placeholder.com/80' alt='Producto' />

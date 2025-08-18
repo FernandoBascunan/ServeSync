@@ -40,8 +40,6 @@
   border-radius: 3px;
   border: none;
 }
-
-/* Parte derecha (productos) */
 .containerRight {
   flex: 1;
   background-color: white;

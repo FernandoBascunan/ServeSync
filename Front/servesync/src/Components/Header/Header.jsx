@@ -13,7 +13,7 @@ const Header = () => {
     window.location.href = "/mesas"; // o tu ruta deseada
     };
     const handlePedidos = () => {
-    window.location.href = "/ingresos"; // o tu ruta deseada
+    window.location.href = "/pedidos"; // o tu ruta deseada
     };
     return(
         <div className="header">

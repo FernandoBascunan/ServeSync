@@ -10,7 +10,7 @@ import Registro from "../Pages/Registro/Registro";
 import Perfil from "../Pages/Perfil/Perfil";
 import Inventario from "../Pages/Inventario/Inventario";
 import Mesas from "../Pages/Mesas/Mesas";
-import Ingresos from "../Pages/Ingresos/Ingresos";
+import Pedidos from "../Pages/Pedidos/Pedidos";
 
 
 const router = createBrowserRouter([
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       { path: "perfil", element: <Perfil /> },
       { path: "inventario", element: <Inventario /> },
       { path: "mesas", element: <Mesas /> },
-        {path: "ingresos", element: <Ingresos /> },
+      { path: "pedidos", element: <Pedidos />},
     ],
   },
 ]);
