@@ -9,6 +9,18 @@
   align-items: center;
   height: 100vh;
 }
+
+.inputZona {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 70%;
+  box-sizing: border-box;
+  margin-left: 31%;
+  margin-top: 1.5rem;
+}
+
 .form-container {
   background-color: #444;
   /* Aumenta el padding-top para que el botón no se superponga al título */
@@ -44,15 +56,4 @@
     margin-top: 10px;
     font-family: 'Segoe UI', Tahoma,Verdana, sans-serif;
     box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
-}
-
-.inputProduct {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  width: 70%;
-  box-sizing: border-box;
-  margin-left: 15%;
-  margin-top: 1.5rem;
 }

@@ -63,9 +63,7 @@ const StoragePage = () => {
               </div>
             )}
           </div>
-          <div className='divProducto'>
-            <button class="addproducto" onClick={handleAgregarProducto}> Agregar Producto </button>
-          </div>
+            <button class="zone-add" onClick={handleAgregarProducto}> Agregar Producto </button>
         </div>
 
         {/* Panel Derecho: Productos */}
