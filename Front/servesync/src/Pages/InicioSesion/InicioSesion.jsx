@@ -5,10 +5,10 @@ import './InicioSesion.css'
 const LoginPage = () => {
   
   const handleRegistro = () => {
-    window.location.href = "/registro"; // o tu ruta deseada
+    window.location.href = "/registro"; 
   };
   const handlePerfil = () => {
-    window.location.href = "/perfil"; // o tu ruta deseada
+    window.location.href = "/perfil"; 
   };
 
 
