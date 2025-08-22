@@ -7,7 +7,6 @@
   width: 300px;
   background-color: #4a4a4a;
   padding: 10px;
-  color: white;
   display: flex;
   flex-direction: column;
 }
@@ -53,20 +52,5 @@
   gap: 10px;
 }
 
-.product-card {
-  display: flex;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  padding: 10px;
-  align-items: center;
-  gap: 15px;
-}
 
-.product-info {
-  flex: 1;
-}
 
-.product-stock {
-  font-weight: bold;
-  text-align: right;
-}

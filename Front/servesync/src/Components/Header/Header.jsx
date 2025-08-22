@@ -4,16 +4,16 @@ import './Header.css';
 
 const Header = () => {
     const handlePerfil = () => {
-    window.location.href = "/perfil"; // o tu ruta deseada
+    window.location.href = "/perfil";
     };
     const handleInventario = () => {
-    window.location.href = "/inventario"; // o tu ruta deseada
+    window.location.href = "/inventario"; 
     };
     const handleMesas = () => {
-    window.location.href = "/mesas"; // o tu ruta deseada
+    window.location.href = "/mesas"; 
     };
     const handlePedidos = () => {
-    window.location.href = "/pedidos"; // o tu ruta deseada
+    window.location.href = "/pedidos";
     };
     return(
         <div className="header">

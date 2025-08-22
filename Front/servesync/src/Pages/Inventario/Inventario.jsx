@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import Header from '../../Components/Header/Header';
 import './Inventario.css'; 
+import ProductoInv from '../../Components/ProductoInv/ProductoInv';
 
 const StoragePage = () => {
   const [openFilter, setOpenFilter] = useState(null);
 
   const toggleFilter = (filterName) => {
     setOpenFilter(openFilter === filterName ? null : filterName);
+  };
+
+  const handleAgregarProducto = () => {
+    window.location.href = "/AgregarProducto";
   };
 
   return (
@@ -58,24 +63,22 @@ const StoragePage = () => {
               </div>
             )}
           </div>
+          <div className='divProducto'>
+            <button class="addproducto" onClick={handleAgregarProducto}> Agregar Producto </button>
+          </div>
         </div>
 
         {/* Panel Derecho: Productos */}
         <div className='containerRight'>
           <div className='product-list'>
-            {[1, 2, 3, 4].map((i) => (
-              <div className='product-card' key={i}>
-                <img src='https://via.placeholder.com/80' alt='Producto' />
-                <div className='product-info'>
-                  <h3>Producto {i}</h3>
-                  <p>Fecha de último pedido</p>
-                  <p>Descripción del producto</p>
-                </div>
-                <div className='product-stock'>
-                  <p>Stock en cantidad</p>
-                </div>
-              </div>
-            ))}
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
+            <ProductoInv/>
           </div>
         </div>
       </div>
