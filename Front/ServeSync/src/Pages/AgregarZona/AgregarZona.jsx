@@ -22,10 +22,14 @@ const [formData, setFormData] = useState({
     setError('');
     setSuccess('');
     };
+
+    const handleMesas = () => {
+      window.location.href = "/Mesas";
+    };
     return (
     <div className='containerExt'>
         <div className='form-container'>
-            <button class="back-btn">Volver atrás</button>
+            <button class="back-btn" onClick={handleMesas}>Volver atrás</button>
             <h1 >Agrega nueva zona</h1>
             <div className="columnas">
                 <div className="aaaaa">

@@ -13,6 +13,10 @@ const StoragePage = () => {
   const handleAgregarProducto = () => {
     window.location.href = "/AgregarProducto";
   };
+    const handleDetallesProducto = () => {
+    window.location.href = "/DetallesProducto";
+  };
+
 
   return (
     <div>
@@ -69,7 +73,7 @@ const StoragePage = () => {
         {/* Panel Derecho: Productos */}
         <div className='containerRight'>
           <div className='product-list'>
-            <ProductoInv/>
+            <ProductoInv onClick={handleDetallesProducto}/>
             <ProductoInv/>
             <ProductoInv/>
             <ProductoInv/>
