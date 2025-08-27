@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="Mesa")
+@Table(name="mesa")
 @Data
 public class Mesa {
     @Id

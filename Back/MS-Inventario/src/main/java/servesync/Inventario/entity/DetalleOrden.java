@@ -1,30 +1,30 @@
 package servesync.Inventario.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "detalle_orden")
-@Data
+@Table(name="detalle_orden")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DetalleOrden {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer cantidad;
+    private int cantidad;
+    private double precioUnitario;
 
-    private BigDecimal costoUnitario;
-
-    private BigDecimal subtotal;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orden_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "orden_compra_id", nullable = false)
     private OrdenCompra ordenCompra;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
-    private Item item;
+    private Producto producto;
 }

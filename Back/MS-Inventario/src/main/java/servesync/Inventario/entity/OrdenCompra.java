@@ -1,42 +1,29 @@
 package servesync.Inventario.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "ordenes_compra")
-@Data
+@Table(name="orden_compra")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrdenCompra {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private LocalDate fechaIngreso;
     private String proveedor;
-
-    private LocalDateTime fechaEmision;
-
-    private LocalDate fechaEntrega;
-
-    private BigDecimal total;
-
-    @Enumerated(EnumType.STRING)
-    private EstadoOrden estado;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empresa_id", nullable = false)
-    private Empresa empresa;
-
+    @Column(name="empresaID",nullable = false)
+    private Long empresaID;
     @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleOrden> detalles = new ArrayList<>();
-
-    public enum EstadoOrden {
-        PENDIENTE, RECIBIDA, CANCELADA
-    }
 }
