@@ -1,7 +1,14 @@
 import Header from '../../Components/Header/Header';
 import './Mesas.css';
 
-const TablesPage = () => (
+const TablesPage = () => {
+  
+  
+  const handleAgregarZona = () => {
+    window.location.href = "/AgregarZona";
+  };
+  
+  return(
   <div>
     <Header />
 
@@ -13,7 +20,7 @@ const TablesPage = () => (
         <button className="zone-btn">Patio</button>
         <button className="zone-btn">Terraza</button>
 
-        <button className="zone-add">Agregar Zona</button>
+        <button className="zone-add" onClick={handleAgregarZona}>Agregar Zona</button>
       </aside>
 
       {/*Panel Derecho: Mesas*/}
@@ -58,6 +65,6 @@ const TablesPage = () => (
       </section>
     </div>
   </div>
-);
+)};
 
 export default TablesPage;

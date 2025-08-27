@@ -1,0 +1,22 @@
+.producto {
+    background: #f9f9f9;
+    cursor: pointer;
+}
+.product-card {
+    display: flex;
+    background-color: #f9f9f9;
+    padding: 10px;
+    align-items: center;
+    gap: 15px;
+}
+.product-info {
+    flex: 1;
+    text-align: left;
+}
+
+.product-stock {
+    display: flex;
+    font-weight: bold;
+    text-align: right;
+    align-items: right;
+}

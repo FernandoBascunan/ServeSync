@@ -53,20 +53,20 @@ const RegisterPage = () => {
             <h1 >Registrate!</h1>
             <div className="columnas">
                 <div className="columna izquierda">
-                    <input type="text" name="nombre" placeholder="Nombre" onChange={handleChange} />
-                    <input type="email" name="email" placeholder="Correo electrónico" onChange={handleChange} />
-                    <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} />
-                    <input type="password" name="confirmarPassword" placeholder="Confirmar contraseña" onChange={handleChange} />
+                    <input className='inputRegister' type="text" name="nombre" placeholder="Nombre" onChange={handleChange} />
+                    <input className='inputRegister' type="email" name="email" placeholder="Correo electrónico" onChange={handleChange} />
+                    <input className='inputRegister' type="password" name="password" placeholder="Contraseña" onChange={handleChange} />
+                    <input className='inputRegister' type="password" name="confirmarPassword" placeholder="Confirmar contraseña" onChange={handleChange} />
                 </div>
                 <div className="columna derecha">
-                    <input type="text" name="telefono" placeholder="Teléfono" onChange={handleChange} />
-                    <input type="text" name="direccion" placeholder="Dirección" onChange={handleChange} />
-                    <input type="text" name="rut" placeholder="RUT" onChange={handleChange} />
-                    <input type="text" name="tipoPyme" placeholder="Nombre de la Pyme" onChange={handleChange} />
+                    <input className='inputRegister' type="text" name="telefono" placeholder="Teléfono" onChange={handleChange} />
+                    <input className='inputRegister' type="text" name="direccion" placeholder="Dirección" onChange={handleChange} />
+                    <input className='inputRegister' type="text" name="rut" placeholder="RUT" onChange={handleChange} />
+                    <input className='inputRegister' type="text" name="tipoPyme" placeholder="Nombre de la Pyme" onChange={handleChange} />
                 </div>
             </div>
             <div className="input-centro">
-                <input type="text" name="registro" placeholder="Año de Registro" onChange={handleChange} />
+                <input className='inputRegister' type="text" name="registro" placeholder="Año de Registro" onChange={handleChange} />
             </div>
             <button className='register-button' onClick={handleSubmit}>Registrarse</button>
         </div>
