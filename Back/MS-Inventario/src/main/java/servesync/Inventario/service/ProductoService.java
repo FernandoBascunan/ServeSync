@@ -2,6 +2,7 @@ package servesync.Inventario.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import servesync.Inventario.config.TenantContext;
 import servesync.Inventario.entity.Producto;
 import servesync.Inventario.repository.ProductoRepository;
@@ -13,8 +14,8 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Producto> listarProductos(Long empresaId) {
-        //Long empresaId = TenantContext.getCurrentTenant();
+    public List<Producto> listarProductos() {
+        Long empresaId = TenantContext.getCurrentTenant();
         return productoRepository.findAllByEmpresaID(empresaId);
     }
     public Producto crearProducto(Producto producto) {

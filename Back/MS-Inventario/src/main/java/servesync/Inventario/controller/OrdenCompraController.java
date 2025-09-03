@@ -2,6 +2,8 @@ package servesync.Inventario.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import servesync.Inventario.dto.OrdenCompraDTO;
+import servesync.Inventario.dto.OrdenResponseDTO;
 import servesync.Inventario.entity.OrdenCompra;
 import servesync.Inventario.service.OrdenCompraService;
 
@@ -13,12 +15,12 @@ public class OrdenCompraController {
     @Autowired
     OrdenCompraService ordenCompraService;
     @PutMapping
-    public void ingresarOrden(@RequestBody OrdenCompra ordenCompra) {
+    public void ingresarOrden(@RequestBody OrdenCompraDTO ordenCompra) {
         ordenCompraService.ingresar(ordenCompra);
     }
     @GetMapping
-    public List<OrdenCompra> listarOrdenes(Long empresaId) {
-        return ordenCompraService.Ordenes(empresaId);
+    public List<OrdenResponseDTO> listarOrdenes() {
+        return ordenCompraService.Ordenes();
     }
 
 }

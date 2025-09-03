@@ -14,8 +14,8 @@ public class InventarioController {
     private ProductoService productoService;
 
     @GetMapping
-    public List<Producto> mostrarStock(Long empresaID) {
-        return productoService.listarProductos(empresaID);
+    public List<Producto> mostrarStock() {
+        return productoService.listarProductos();
     }
     @PostMapping
     public Producto crear(@RequestBody Producto producto) {

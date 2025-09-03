@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         String token = jwtUtil.generateToken(user.getNombreEmpresa(), user.getId());
         logger.info("Token generado: {}", token);
         //  Retornar DTO con token
-        return new LoginResponse(user.getId(), user.getNombreEmpresa(), user.getCorreo(), token,true);
+        return new LoginResponse(user.getId(), user.getNombreEmpresa(), token,true);
     }
 
     @Override

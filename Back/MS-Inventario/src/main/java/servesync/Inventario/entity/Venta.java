@@ -1,5 +1,6 @@
 package servesync.Inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Venta {
     private Long empresaID;
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<DetalleVenta> detalles = new ArrayList<>();
 
 

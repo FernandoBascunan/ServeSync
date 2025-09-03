@@ -1,8 +1,10 @@
 package servesync.Inventario.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import servesync.Inventario.entity.Venta;
+import servesync.Inventario.dto.VentaDTO;
+import servesync.Inventario.dto.VentaResponseDTO;
 import servesync.Inventario.service.VentaService;
 
 import java.util.List;
@@ -13,12 +15,14 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
     @GetMapping
-    public List<Venta> listarVentas(Long empresaId) {
-        return ventaService.listar(empresaId);
+    public ResponseEntity<List<VentaResponseDTO>> listarVentas() {
+        List<VentaResponseDTO> ventas = ventaService.listar();
+        return ResponseEntity.ok(ventas);
     }
     @PutMapping
-    public Venta registrarVenta(Venta venta) {
-        return ventaService.registrarVenta(venta);
+    public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody  VentaDTO ventaDTO) {
+        VentaResponseDTO nuevaVenta = ventaService.registrarVenta(ventaDTO);
+        return ResponseEntity.ok(nuevaVenta);
     }
 
 

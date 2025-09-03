@@ -18,10 +18,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // deshabilita CSRF para pruebas con Postman
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/register", "/api/usuarios/login","/api/usuarios/edit","/api/usuarios/{id}","api/usuarios/password").permitAll() // permitimos register y login
-                        .anyRequest().authenticated() // el resto requiere autenticación
+                        .requestMatchers(
+                                "/api/usuarios/register",
+                                "/api/usuarios/login",
+                                "/api/usuarios/edit",
+                                "/api/usuarios/*",
+                                "/api/usuarios/password"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 );
 
         return http.build();

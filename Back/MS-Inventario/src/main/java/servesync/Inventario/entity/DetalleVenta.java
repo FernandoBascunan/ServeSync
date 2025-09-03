@@ -1,5 +1,6 @@
 package servesync.Inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class DetalleVenta {
 
     @ManyToOne
     @JoinColumn(name = "venta_id", nullable = false)
+    @JsonBackReference
     private Venta venta;
 
     @ManyToOne
