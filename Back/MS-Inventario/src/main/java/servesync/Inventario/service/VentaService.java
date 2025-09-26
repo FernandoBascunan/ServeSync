@@ -33,15 +33,15 @@ public class VentaService {
                 .collect(Collectors.toList());
     }
     public VentaResponseDTO registrarVenta(VentaDTO ventaDTO) {
-        //Long empresaId = TenantContext.getCurrentTenant();
+        Long empresaId = TenantContext.getCurrentTenant();
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDateTime.now());
-        venta.setEmpresaID(ventaDTO.getEmpresaID());
+        venta.setEmpresaID(empresaId);
 
         for(detalleVentaDTO detalleDTO : ventaDTO.getDetalles()){
-            Producto producto = productoRepository.findById(detalleDTO.getProductoId())
+            Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
                     .orElseThrow(() -> new RuntimeException(
-                            "Producto no encontrado con ID: " + detalleDTO.getProductoId()
+                            "Producto no encontrado con ID: " + detalleDTO.getIdProducto()
                     ));
 
             if (producto.getStockActual() < detalleDTO.getCantidad()) {

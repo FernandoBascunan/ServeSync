@@ -9,20 +9,20 @@ import servesync.Mesas.service.ZonaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/zona")
+@RequestMapping("/api/zonas")
 public class ZonaController {
     @Autowired
     private ZonaService zonaService;
-    @GetMapping("/{id}")
-    public List<Zona> getAllZones(Long empresaId) {
+    @GetMapping("/empresa/{empresaId}")
+    public List<Zona> getAllZones(@PathVariable Long empresaId) {
         return zonaService.getZona(empresaId);
     }
-    @PutMapping
+    @PostMapping
     public Zona createZona(@RequestBody Zona zona) {
         return zonaService.crearZona(zona);
     }
-    @DeleteMapping("/{id}")
-    public void eliminarZona(int zonaId) {
+    @DeleteMapping("/{zonaId}")
+    public void eliminarZona(@PathVariable int zonaId) {
         zonaService.eliminarZona(zonaId);
     }
 

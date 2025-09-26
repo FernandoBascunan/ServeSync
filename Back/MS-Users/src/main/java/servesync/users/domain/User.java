@@ -31,7 +31,6 @@ public class User{
     private String nombreUsuario;
     private String rut;
     private String password;
-    private long tokenVersion = 0;
     private Boolean activo= true;
 
 }

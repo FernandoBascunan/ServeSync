@@ -8,20 +8,20 @@ import servesync.Mesas.service.MesaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/apí/mesas")
+@RequestMapping("/api/mesas")
 public class MesaController {
     @Autowired
     MesaService mesaService;
-    @PutMapping
-    public Mesa crearMesa(Mesa mesa) {
+    @PostMapping
+    public Mesa crearMesa(@RequestBody Mesa mesa) {
          return mesaService.crearMesa(mesa);
     }
     @DeleteMapping("/{id}")
-    public void eliminarMesa(int id) {
+    public void eliminarMesa(@PathVariable int id) {
         mesaService.eliminarMesa(id);
     }
     @GetMapping("/{id}")
-    public List<Mesa> mesasPorZona(int zonaId) {
+    public List<Mesa> mesasPorZona(@PathVariable int zonaId) {
          return mesaService.mostrarMesas(zonaId);
     }
 

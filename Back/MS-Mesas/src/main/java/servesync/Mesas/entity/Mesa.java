@@ -11,10 +11,7 @@ public class Mesa {
     private long id;
     private int capacidad;
     private Boolean status= true;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "zona_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "zona_id")
     private Zona zona;
-
-
 }
