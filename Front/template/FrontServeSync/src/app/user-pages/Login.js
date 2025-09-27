@@ -1,9 +1,105 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter  } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 
 export class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: { rutEmpresa: '', password: '' },
+      loading: false,
+      error: '',
+      success: '',
+      rememberMe: false
+    };
+  }
+
+formatearRut = (valor) => {
+  if (!valor) return "";
+
+  // Elimina todo lo que no sea número o K
+  valor = valor.replace(/[^0-9kK]/g, "").toUpperCase();
+
+  // Separa cuerpo y dígito verificador
+  let cuerpo = valor.slice(0, -1);
+  let dv = valor.slice(-1);
+
+  // Limita cuerpo a 8 dígitos
+  cuerpo = cuerpo.slice(0, 8);
+
+  // Formatea con puntos de miles
+  cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  // Devuelve con guion si hay dígito verificador
+  return dv ? `${cuerpo}-${dv}` : cuerpo;
+};
+
+handleInputChange = (e) => {
+  const { name, value } = e.target;
+  let newValue = value;
+
+  if (name === "rutEmpresa") {
+    newValue = this.formatearRut(newValue);
+  }
+
+  this.setState(prevState => ({
+    formData: {
+      ...prevState.formData,
+      [name]: newValue
+    },
+    error: ''
+  }));
+};
+
+  handleRememberMeChange = (e) => {
+    this.setState({ rememberMe: e.target.checked });
+  };
+
+   handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { rutEmpresa, password } = this.state.formData;
+    if (!rutEmpresa || !password) {
+      this.setState({ error: 'Todos los campos son obligatorios' });
+      return;
+    }
+
+    this.setState({ loading: true, error: '', success: '' });
+
+    try {
+      const response = await fetch('http://localhost:8080/api/usuarios/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.state.formData),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('userId', result.privateKey);
+        localStorage.setItem('username', result.username);
+        if (this.state.rememberMe) localStorage.setItem('rememberMe', 'true');
+
+        this.setState({ success: `¡Bienvenido ${result.username}!`, loading: false });
+
+        setTimeout(() => this.props.history.push('/homeee/Home'), 1500);
+      } else {
+        throw new Error('Credenciales inválidas');
+      }
+    } catch (error) {
+      this.setState({ error: error.message || 'Error al iniciar sesión', loading: false });
+    }
+  };
+
   render() {
+    const { formData, loading, error, success, rememberMe } = this.state;
+
     return (
       <div>
         <div className="d-flex align-items-center auth px-0">
@@ -15,37 +111,70 @@ export class Login extends Component {
                 </div>
                 <h4>Bienvenido a ServeSync</h4>
                 <h6 className="font-weight-light">Inicia sesion para continuar</h6>
-                <Form className="pt-3">
+
+                {error && <div className="alert alert-danger">{error}</div>}
+                {success && <div className="alert alert-success">{success}</div>}
+
+                <Form className="pt-3" onSubmit={this.handleSubmit}>
                   <Form.Group className="d-flex search-field">
-                    <Form.Control type="dniCompany" placeholder="Rut Empresa" size="lg" className="h-auto" />
+                    <Form.Control
+                      type="text"
+                      name="rutEmpresa"
+                      placeholder="RUT Empresa"
+                      size="lg"
+                      className="h-auto"
+                      value={formData.rutEmpresa}
+                      onChange={this.handleInputChange}
+                      disabled={loading}
+                    />
                   </Form.Group>
                   <Form.Group className="d-flex search-field">
-                    <Form.Control type="password" placeholder="Contraseña" size="lg" className="h-auto" />
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      placeholder="Contraseña"
+                      size="lg"
+                      className="h-auto"
+                      value={formData.password}
+                      onChange={this.handleInputChange}
+                      disabled={loading}
+                    />
                   </Form.Group>
+
                   <div className="mt-3">
-                    <Link className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" to="/dashboard">INICIAR SESION</Link>
+                    <button type="submit" className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" disabled={loading}>
+                      {loading ? 'INICIANDO SESIÓN...' : 'INICIAR SESION'}
+                    </button>
                   </div>
+
                   <div className="my-2 d-flex justify-content-between align-items-center">
                     <div className="form-check">
                       <label className="form-check-label text-muted">
-                        <input type="checkbox" className="form-check-input"/>
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          checked={rememberMe}
+                          onChange={this.handleRememberMeChange}
+                          disabled={loading}
+                        />
                         <i className="input-helper"></i>
                         Mantener mi cuenta iniciada
                       </label>
                     </div>
-                    <a href="!#" onClick={event => event.preventDefault()} className="auth-link text-black">Olvidaste tu contraseña? Contactanos</a>
+                    <a href="!#" onClick={e => e.preventDefault()} className="auth-link text-black">Olvidaste tu contraseña? Contactanos</a>
                   </div>
+
                   <div className="text-center mt-4 font-weight-light">
-                    No tienes una cuenta? <Link to="/user-pages/register" className="text-primary">Crear una cuenta</Link>
+                    No tienes una cuenta? <Link to="/user-pages/register-1" className="text-primary">Crear una cuenta</Link>
                   </div>
                 </Form>
               </div>
             </div>
           </div>
-        </div>  
+        </div>
       </div>
     )
   }
 }
 
-export default Login
+export default Login;

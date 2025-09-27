@@ -19,13 +19,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                // No agregamos .cors() aquí
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/usuarios/register",
                                 "/api/usuarios/login",
                                 "/api/usuarios/edit",
-                                "/api/usuarios/*",
-                                "/api/usuarios/password"
+                                "/api/usuarios/password",
+                                "/api/usuarios/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
