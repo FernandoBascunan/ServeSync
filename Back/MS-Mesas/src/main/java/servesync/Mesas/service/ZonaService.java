@@ -3,6 +3,7 @@ package servesync.Mesas.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import servesync.Mesas.config.TenantContext;
 import servesync.Mesas.entity.Zona;
 import servesync.Mesas.repository.ZonaRepository;
 
@@ -13,10 +14,13 @@ import java.util.List;
 public class ZonaService {
     @Autowired
     ZonaRepository zonaRepository;
-    public List<Zona> getZona(Long empresaId) {
+    public List<Zona> getZona() {
+        Long empresaId = TenantContext.getCurrentTenant();
         return zonaRepository.findAllByEmpresaId(empresaId);
     }
     public Zona crearZona(Zona zona) {
+        Long empresaId = TenantContext.getCurrentTenant();
+        zona.setEmpresaId(empresaId);
         return zonaRepository.save(zona);
     }
     public void eliminarZona(int zonaId) {

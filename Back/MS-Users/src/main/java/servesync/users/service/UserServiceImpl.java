@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import servesync.users.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @Transactional

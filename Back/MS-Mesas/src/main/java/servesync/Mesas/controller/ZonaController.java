@@ -13,9 +13,9 @@ import java.util.List;
 public class ZonaController {
     @Autowired
     private ZonaService zonaService;
-    @GetMapping("/empresa/{empresaId}")
-    public List<Zona> getAllZones(@PathVariable Long empresaId) {
-        return zonaService.getZona(empresaId);
+    @GetMapping("/empresa")
+    public List<Zona> getAllZones() {
+        return zonaService.getZona();
     }
     @PostMapping
     public Zona createZona(@RequestBody Zona zona) {
