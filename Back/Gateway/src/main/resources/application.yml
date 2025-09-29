@@ -28,6 +28,8 @@ spring:
           uri: http://localhost:8000
           predicates:
             - Path=/api/prophet/**
+          filters:
+            - StripPrefix=2
 
 
 logging:
