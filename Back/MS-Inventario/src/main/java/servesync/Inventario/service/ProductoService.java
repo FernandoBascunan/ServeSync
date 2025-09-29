@@ -27,5 +27,9 @@ public class ProductoService {
     public Producto actualizarProducto(Producto producto,Long id) {
         return productoRepository.save(producto);
     }
+    public List<Producto> listarProductosPorEmpresa(Long empresaID) {
+        return productoRepository.findByEmpresaID(empresaID);
+    }
+
 
 }

@@ -55,47 +55,47 @@ handleInputChange = (e) => {
     this.setState({ rememberMe: e.target.checked });
   };
 
-   handleSubmit = async (e) => {
-    e.preventDefault();
+  handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const { rutEmpresa, password } = this.state.formData;
-    if (!rutEmpresa || !password) {
-      this.setState({ error: 'Todos los campos son obligatorios' });
-      return;
+  const { rutEmpresa, password } = this.state.formData;
+  if (!rutEmpresa || !password) {
+    this.setState({ error: 'Todos los campos son obligatorios' });
+    return;
+  }
+
+  this.setState({ loading: true, error: '', success: '' });
+
+  try {
+    const response = await fetch('http://localhost:8080/api/usuarios/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.formData),
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
 
-    this.setState({ loading: true, error: '', success: '' });
+    const result = await response.json();
 
-    try {
-      const response = await fetch('http://localhost:8080/api/usuarios/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.state.formData),
-        credentials: 'include'
-      });
+    if (result.success) {
+      localStorage.setItem('authToken', result.token);
+      localStorage.setItem('userId', result.privateKey);
+      localStorage.setItem('username', result.username);
+      if (this.state.rememberMe) localStorage.setItem('rememberMe', 'true');
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
+      this.setState({ success: `¡Bienvenido ${result.username}!`, loading: false });
 
-      const result = await response.json();
-
-      if (result.success) {
-        localStorage.setItem('authToken', result.token);
-        localStorage.setItem('userId', result.privateKey);
-        localStorage.setItem('username', result.username);
-        if (this.state.rememberMe) localStorage.setItem('rememberMe', 'true');
-
-        this.setState({ success: `¡Bienvenido ${result.username}!`, loading: false });
-
-        setTimeout(() => this.props.history.push('/homeee/Home'), 1500);
-      } else {
-        throw new Error('Credenciales inválidas');
-      }
-    } catch (error) {
-      this.setState({ error: error.message || 'Error al iniciar sesión', loading: false });
+      setTimeout(() => this.props.history.push('/homeee/Home'), 1500);
+    } else {
+      throw new Error('Credenciales inválidas');
     }
-  };
+  } catch (error) {
+    this.setState({ error: error.message || 'Error al iniciar sesión', loading: false });
+  }
+};
 
   render() {
     const { formData, loading, error, success, rememberMe } = this.state;

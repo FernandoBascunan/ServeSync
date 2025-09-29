@@ -30,4 +30,9 @@ public class InventarioController {
         productoService.eliminarProducto(id);
     }
 
+    @GetMapping("/{empresaID}")
+    public List<Producto> mostrarStockPorEmpresa(@PathVariable Long empresaID) {
+        return productoService.listarProductosPorEmpresa(empresaID);
+    }
+
 }

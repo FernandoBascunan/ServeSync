@@ -1,69 +1,174 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
+import axios from 'axios';
 
+export class AddProduct extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nombre: '',
+      cantidad: 0,
+      precio: 0,
+      categoria: '',
+      loading: false,
+      error: '',
+      success: ''
+    };
+  }
 
-export class addProduct extends Component {
-  render () {
+  handleInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value, error: '', success: '' });
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const { nombre, cantidad, precio, categoria } = this.state;
+
+    if (!nombre || !cantidad || !precio || !categoria) {
+      this.setState({ error: 'Todos los campos son obligatorios' });
+      return;
+    }
+
+    this.setState({ loading: true, error: '', success: '' });
+
+    try {
+      // Tomamos el token y el userId del localStorage
+      const token = localStorage.getItem('authToken');
+      const empresaID = parseInt(localStorage.getItem('userId'));
+
+      const payload = {
+        nombre,
+        cantidad: parseInt(cantidad),
+        precio: parseFloat(precio),
+        categoria,
+        empresaID
+      };
+
+      const response = await axios.post(
+        'http://localhost:8080/api/inventario',
+        payload,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      this.setState({
+        success: `Producto "${response.data.nombre}" agregado correctamente`,
+        nombre: '',
+        cantidad: 0,
+        precio: 0,
+        categoria: '',
+        loading: false
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        error: error.response?.data?.message || 'Error al agregar producto',
+        loading: false
+      });
+    }
+  };
+
+  render() {
+    const { nombre, cantidad, precio, categoria, loading, error, success } = this.state;
+
     return (
       <div>
         <div className="page-header">
-          <h3 className="page-title">
-            Inventario
-          </h3>
+          <h3 className="page-title">Inventario</h3>
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Inventario</a></li>
+              <li className="breadcrumb-item"><a href="!#" onClick={e => e.preventDefault()}>Inventario</a></li>
               <li className="breadcrumb-item active" aria-current="page">Agregar Producto</li>
             </ol>
           </nav>
         </div>
+
         <div className="col-12 grid-margin stretch-card">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="card-title">Agregar un producto nuevo al Inventario</h4>
-                <p className="card-description"> Llenando las celdas en este formulario logragas agregar un producto nuevo a tu inventario </p>
-                <form className="forms-sample">
-                    <Form.Group>
-                        <label htmlFor="exampleInputName1">Nombre del producto</label>
-                        <Form.Control type="text" className="form-control" id="exampleInputName1" placeholder="Nombre del producto" />
-                    </Form.Group>
-                    <Form.Group>
-                        <label htmlFor="exampleInputName1">Cantidad inicial en bodega</label>
-                        <Form.Control type="text" className="form-control" id="exampleInputName1" placeholder="0" />
-                    </Form.Group>
-                    <Form.Group>
-                        <label htmlFor="exampleInputName1">Ingresa la cantidad de cantidad minima para estar en bajo stock</label>
-                        <Form.Control type="text" className="form-control" id="exampleInputName1" placeholder="0" />
-                    </Form.Group>
-                    <Form.Group>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                        <span className="input-group-text bg-primary text-white">$</span>
-                        </div>
-                        <Form.Control type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <div className="input-group-append">
-                        <span className="input-group-text">.00</span>
-                        </div>
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Agregar un producto nuevo al Inventario</h4>
+              <p className="card-description">Llenando las celdas en este formulario logras agregar un producto nuevo a tu inventario</p>
+
+              {error && <div className="alert alert-danger">{error}</div>}
+              {success && <div className="alert alert-success">{success}</div>}
+
+              <Form onSubmit={this.handleSubmit} className="forms-sample">
+                <Form.Group>
+                  <label>Nombre del producto</label>
+                  <Form.Control
+                    type="text"
+                    name="nombre"
+                    placeholder="Nombre del producto"
+                    value={nombre}
+                    onChange={this.handleInputChange}
+                    disabled={loading}
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <label>Cantidad inicial en bodega</label>
+                  <Form.Control
+                    type="number"
+                    name="cantidad"
+                    placeholder="0"
+                    value={cantidad}
+                    onChange={this.handleInputChange}
+                    disabled={loading}
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <label>Precio</label>
+                  <div className="input-group">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text bg-primary text-white">$</span>
                     </div>
-                    </Form.Group>
-                    <Form.Group>
-                      <label htmlFor="exampleFormControlSelect2">Categoria</label>
-                      <select className="form-control" id="exampleFormControlSelect2">
-                        <option></option>
-                        <option>Bebida</option>
-                        <option>Cerveza</option>
-                        <option>Jugo</option>
-                      </select>
-                    </Form.Group>
-                    <button type="submit" className="btn btn-primary mr-2">Agregar</button>
-                    <button className="btn btn-light">Cancelar</button>
-                </form>
-              </div>
+                    <Form.Control
+                      type="number"
+                      name="precio"
+                      placeholder="0.00"
+                      value={precio}
+                      onChange={this.handleInputChange}
+                      disabled={loading}
+                    />
+                    <div className="input-group-append">
+                      <span className="input-group-text">.00</span>
+                    </div>
+                  </div>
+                </Form.Group>
+
+                <Form.Group>
+                  <label>Categoria</label>
+                  <Form.Control
+                    as="select"
+                    name="categoria"
+                    value={categoria}
+                    onChange={this.handleInputChange}
+                    disabled={loading}
+                  >
+                    <option value="">Selecciona una categoría</option>
+                    <option value="Bebida">Bebida</option>
+                    <option value="Cerveza">Cerveza</option>
+                    <option value="Jugo">Jugo</option>
+                  </Form.Control>
+                </Form.Group>
+
+                <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
+                  {loading ? 'AGREGANDO...' : 'Agregar'}
+                </button>
+                <button className="btn btn-light" onClick={e => { e.preventDefault(); this.setState({ nombre:'', cantidad:0, precio:0, categoria:'' }) }}>Cancelar</button>
+              </Form>
             </div>
           </div>
+        </div>
       </div>
     );
   }
 }
 
-export default addProduct
+export default AddProduct;
