@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
+import axios from 'axios';
 
 export class AddZone extends Component {
   constructor(props) {
@@ -8,7 +9,10 @@ export class AddZone extends Component {
       nombreZona: "",
       cantidadMesas: 0,
       asientos: [],
-      descripcion: ""
+      descripcion: "",
+      loading: false,
+      error: "",
+      success: ""
     };
   }
 
@@ -26,13 +30,82 @@ export class AddZone extends Component {
     this.setState({ asientos: newAsientos });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Datos enviados:", this.state);
-    // Aquí podrías mandar los datos a tu backend
+
+    const { nombreZona, cantidadMesas, asientos, descripcion } = this.state;
+
+    if (!nombreZona || cantidadMesas <= 0 || asientos.some(a => !a)) {
+      this.setState({ error: 'Todos los campos son obligatorios', success: '' });
+      return;
+    }
+
+    this.setState({ loading: true, error: '', success: '' });
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const empresaID = parseInt(localStorage.getItem('userId'));
+
+      // 1️⃣ Crear la zona
+      const zonaPayload = {
+        nombre_zona: nombreZona,
+        empresa_id: empresaID,
+        descripcion
+      };
+
+      const zonaResponse = await axios.post(
+        'http://localhost:8080/api/zonas',
+        zonaPayload,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const zonaId = zonaResponse.data.id;
+
+      // 2️⃣ Crear mesas asociadas
+      const mesasPromises = asientos.map((capacidad) => {
+        return axios.post(
+          'http://localhost:8080/api/mesas',
+          {
+            capacidad: parseInt(capacidad),
+            status: 'DISPONIBLE',
+            zona_id: zonaId
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+      });
+
+      await Promise.all(mesasPromises);
+
+      this.setState({
+        success: `Zona "${nombreZona}" creada correctamente con ${cantidadMesas} mesas`,
+        nombreZona: '',
+        cantidadMesas: 0,
+        asientos: [],
+        descripcion: '',
+        loading: false
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        error: error.response?.data?.message || 'Error al crear zona',
+        loading: false
+      });
+    }
   };
 
   render() {
+    const { nombreZona, cantidadMesas, asientos, descripcion, loading, error, success } = this.state;
+
     return (
       <div>
         <div className="page-header">
@@ -40,13 +113,9 @@ export class AddZone extends Component {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="!#" onClick={(event) => event.preventDefault()}>
-                  Zona de mesas
-                </a>
+                <a href="!#" onClick={(event) => event.preventDefault()}>Zona de mesas</a>
               </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Agregar Zona
-              </li>
+              <li className="breadcrumb-item active" aria-current="page">Agregar Zona</li>
             </ol>
           </nav>
         </div>
@@ -55,66 +124,64 @@ export class AddZone extends Component {
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Agregar una zona nueva</h4>
-              <p className="card-description">
-                Aquí podrás agregar una zona nueva donde podrás asignar todas las mesas que quieras
-              </p>
+              <p className="card-description">Aquí podrás agregar una zona nueva donde podrás asignar todas las mesas que quieras</p>
+
+              {loading && <p>Cargando...</p>}
+              {error && <p className="text-danger">{error}</p>}
+              {success && <p className="text-success">{success}</p>}
 
               <form className="forms-sample" onSubmit={this.handleSubmit}>
                 <Form.Group>
                   <label htmlFor="nombreZona">Nombre de la zona</label>
                   <Form.Control
                     type="text"
-                    className="form-control"
                     id="nombreZona"
                     placeholder="Nombre de la zona"
-                    value={this.state.nombreZona}
+                    value={nombreZona}
                     onChange={(e) => this.setState({ nombreZona: e.target.value })}
                   />
                 </Form.Group>
+                <br />
 
                 <Form.Group>
                   <label htmlFor="cantidadMesas">Cantidad de mesas</label>
                   <Form.Control
                     type="number"
-                    className="form-control"
                     id="cantidadMesas"
                     placeholder="0"
-                    value={this.state.cantidadMesas}
+                    value={cantidadMesas}
                     onChange={this.handleCantidadMesasChange}
                   />
                 </Form.Group>
+                <br />
 
-                {/* Render dinámico de inputs para asientos */}
-                {this.state.asientos.map((asiento, index) => (
+                {asientos.map((asiento, index) => (
                   <Form.Group key={index}>
                     <label>Mesa {index + 1} - Asientos máximos</label>
                     <Form.Control
                       type="number"
-                      className="form-control"
                       placeholder="0"
                       value={asiento}
                       onChange={(e) => this.handleAsientosChange(index, e.target.value)}
                     />
+                    <br />
                   </Form.Group>
                 ))}
 
                 <Form.Group>
                   <label htmlFor="descripcion">Descripción</label>
                   <textarea
-                    className="form-control"
                     id="descripcion"
-                    rows="4"
-                    value={this.state.descripcion}
+                    className="form-control"
+                    rows="3"
+                    value={descripcion}
                     onChange={(e) => this.setState({ descripcion: e.target.value })}
                   ></textarea>
                 </Form.Group>
+                <br />
 
-                <button type="submit" className="btn btn-primary mr-2">
-                  Agregar
-                </button>
-                <button type="button" className="btn btn-light">
-                  Cancelar
-                </button>
+                <button type="submit" className="btn btn-primary mr-2">Agregar</button>
+                <button type="button" className="btn btn-light">Cancelar</button>
               </form>
             </div>
           </div>

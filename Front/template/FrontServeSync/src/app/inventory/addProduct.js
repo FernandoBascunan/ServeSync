@@ -7,7 +7,7 @@ export class AddProduct extends Component {
     super(props);
     this.state = {
       nombre: '',
-      cantidad: 0,
+      stockActual: 0,
       precio: 0,
       categoria: '',
       loading: false,
@@ -23,9 +23,9 @@ export class AddProduct extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { nombre, cantidad, precio, categoria } = this.state;
+    const { nombre, stockActual, precio, categoria } = this.state;
 
-    if (!nombre || !cantidad || !precio || !categoria) {
+    if (!nombre || !stockActual || !precio || !categoria) {
       this.setState({ error: 'Todos los campos son obligatorios' });
       return;
     }
@@ -39,11 +39,13 @@ export class AddProduct extends Component {
 
       const payload = {
         nombre,
-        cantidad: parseInt(cantidad),
+        stockActual: parseInt(stockActual),
         precio: parseFloat(precio),
         categoria,
         empresaID
       };
+
+      console.log(payload)
 
       const response = await axios.post(
         'http://localhost:8080/api/inventario',
@@ -59,7 +61,7 @@ export class AddProduct extends Component {
       this.setState({
         success: `Producto "${response.data.nombre}" agregado correctamente`,
         nombre: '',
-        cantidad: 0,
+        stockActual: 0,
         precio: 0,
         categoria: '',
         loading: false
@@ -74,7 +76,7 @@ export class AddProduct extends Component {
   };
 
   render() {
-    const { nombre, cantidad, precio, categoria, loading, error, success } = this.state;
+    const { nombre, stockActual, precio, categoria, loading, error, success } = this.state;
 
     return (
       <div>
@@ -114,9 +116,9 @@ export class AddProduct extends Component {
                   <label>Cantidad inicial en bodega</label>
                   <Form.Control
                     type="number"
-                    name="cantidad"
+                    name="stockActual"
                     placeholder="0"
-                    value={cantidad}
+                    value={stockActual}
                     onChange={this.handleInputChange}
                     disabled={loading}
                   />
@@ -161,7 +163,7 @@ export class AddProduct extends Component {
                 <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
                   {loading ? 'AGREGANDO...' : 'Agregar'}
                 </button>
-                <button className="btn btn-light" onClick={e => { e.preventDefault(); this.setState({ nombre:'', cantidad:0, precio:0, categoria:'' }) }}>Cancelar</button>
+                <button className="btn btn-light" onClick={e => { e.preventDefault(); this.setState({ nombre:'', stockActual:0, precio:0, categoria:'' }) }}>Cancelar</button>
               </Form>
             </div>
           </div>

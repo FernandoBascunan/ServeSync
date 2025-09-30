@@ -19,8 +19,10 @@ public class ProductoService {
         return productoRepository.findAllByEmpresaID(empresaId);
     }
     public Producto crearProducto(Producto producto) {
+        System.out.println(producto.getStockActual());
         return productoRepository.save(producto);
     }
+
     public void eliminarProducto(Long id) {
         productoRepository.deleteById(id);
     }
