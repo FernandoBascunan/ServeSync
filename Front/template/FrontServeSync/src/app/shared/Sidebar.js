@@ -5,7 +5,22 @@ import { Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
 
 class Sidebar extends Component {
-  state = {};
+  state = {}
+
+
+  handleLogout = () =>{
+    localStorage.removeItem("authToken")
+    localStorage.removeItem("username")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("rememberMe")
+
+    if (this.props.history) {
+      this.props.history.push("/login"); // si Sidebar recibe history de react-router
+    } else {
+      window.location.href = "/login"; // alternativa rápida
+    }
+  }
+
 
   toggleMenuState(menuState) {
     if (this.state[menuState]) {
@@ -65,35 +80,18 @@ class Sidebar extends Component {
               <Dropdown>
                 <Dropdown.Toggle className="nav-link user-switch-dropdown-toggler p-0 toggle-arrow-hide bg-transparent border-0 w-100">
                   <div className="d-flex justify-content-between align-items-start">
-                    <div className="profile-image">
-                    <img className="img-xs rounded-circle" src={ require("../../assets/images/faces/face8.jpg")} alt="profile" />
-                      <div className="dot-indicator bg-success"></div>
-                    </div>
                     <div className="text-wrapper">
-                      <p className="profile-name">Gerardo Benavides</p>
+                      <p className="profile-name">{localStorage.getItem("username") || "Invitado"}</p>
                       <p className="designation">Main user</p>
                     </div>
                     
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="preview-list navbar-dropdown">
-                  <Dropdown.Item className="dropdown-item p-0 preview-item d-flex align-items-center" href="!#" onClick={evt =>evt.preventDefault()}>
-                    <div className="d-flex">
-                      <div className="py-3 px-4 d-flex align-items-center justify-content-center">
-                        <i className="mdi mdi-bookmark-plus-outline mr-0"></i>
-                      </div>
-                      <div className="py-3 px-4 d-flex align-items-center justify-content-center border-left border-right">
-                        <i className="mdi mdi-account-outline mr-0"></i>
-                      </div>
-                      <div className="py-3 px-4 d-flex align-items-center justify-content-center">
-                        <i className="mdi mdi-alarm-check mr-0"></i>
-                      </div>
-                    </div>
-                  </Dropdown.Item>
                   <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={evt =>evt.preventDefault()}>
                     <Trans>Ajuste de la cuenta</Trans>
                   </Dropdown.Item>
-                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={evt =>evt.preventDefault()}>
+                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={this.handleLogout}>
                     <Trans>Cerrar Sesion</Trans>
                   </Dropdown.Item>
                 </Dropdown.Menu>

@@ -81,12 +81,18 @@ handleInputChange = (e) => {
     const result = await response.json();
 
     if (result.success) {
+      console.log("Respuesta del backend:", result);
+
       localStorage.setItem('authToken', result.token);
       localStorage.setItem('userId', result.privateKey);
-      localStorage.setItem('username', result.username);
+
+      if (result.username) {
+        localStorage.setItem('username', result.username);
+      }
+
       if (this.state.rememberMe) localStorage.setItem('rememberMe', 'true');
 
-      this.setState({ success: `¡Bienvenido ${result.username}!`, loading: false });
+      this.setState({ success: `¡Bienvenido ${result.username || ''}!`, loading: false });
 
       setTimeout(() => this.props.history.push('/homeee/Home'), 1500);
     } else {
