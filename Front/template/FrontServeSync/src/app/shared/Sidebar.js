@@ -3,10 +3,76 @@ import { Link, withRouter } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 
 class Sidebar extends Component {
-  state = {}
+    constructor(props) {
+    super(props);
+    this.state = {
+      nombreZona: "",
+      loading: true,
+      error: null
+    };
+  }
 
+
+
+  handleAddZone = async (e) => {
+  const token = localStorage.getItem("authToken");
+  const empresaID = parseInt(localStorage.getItem("userId")); // debe ser Long en backend
+
+  if (!empresaID) {
+    Swal.fire('Error', 'No se encontró el ID de la empresa', 'error');
+    return;
+  }
+
+  const { value: formValues } = await MySwal.fire({
+    title: 'Agregar nueva zona',
+    html: `
+      <div style="text-align:left">
+        <label for="swal-nombre"><strong>Nombre de la zona:</strong></label>
+        <input id="swal-nombre" class="swal2-input" placeholder="Nombre de zona">
+      </div>
+    `,
+    focusConfirm: false,
+    confirmButtonText: 'Agregar',
+    cancelButtonText: 'Cancelar',
+    showCancelButton: true,
+    preConfirm: () => {
+      const nombreZona = document.getElementById('swal-nombre').value.trim();
+      if (!nombreZona) {
+        Swal.showValidationMessage('Debes ingresar un nombre de zona');
+      }
+      return { nombreZona };
+    }
+  });
+
+  if (!formValues) return; // si canceló
+
+  try {
+    await axios.post('http://localhost:8080/api/mesas/zonas', {
+      nombreZona: formValues.nombreZona,
+      empresaId: empresaID
+      
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    Swal.fire({
+      icon: 'success',
+      title: 'Zona agregada',
+      text: `La zona "${formValues.nombreZona}" se agregó correctamente`
+    });
+
+    // Si tienes función para refrescar la lista de zonas en el sideba
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudo agregar la zona', 'error');
+  }
+};
 
   handleLogout = () =>{
     localStorage.removeItem("authToken")
@@ -127,7 +193,9 @@ class Sidebar extends Component {
               <ul className="nav flex-column sub-menu">
                 <li className="nav-item"> <Link className={ this.isPathActive('/zones/zone') ? 'nav-link active' : 'nav-link' } to="/zones/zone"><Trans>Zona 1</Trans></Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/zones/zone') ? 'nav-link active' : 'nav-link' } to="/zones/zone"><Trans>Zona 2</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/zones/addZone') ? 'nav-link active' : 'nav-link' } to="/zones/addZone"><Trans><i className='mdi mdi-plus'></i> Agregar zona nueva</Trans></Link></li>
+                <li className="nav-item"> <a href="#!" className="nav-link" onClick={this.handleAddZone}>
+        <i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans>
+      </a></li>
               </ul>
             </Collapse>
           </li>

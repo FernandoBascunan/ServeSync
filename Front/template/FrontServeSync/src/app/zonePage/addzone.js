@@ -63,29 +63,6 @@ export class AddZone extends Component {
           }
         }
       );
-
-      const zonaId = zonaResponse.data.id;
-
-      // 2️⃣ Crear mesas asociadas
-      const mesasPromises = asientos.map((capacidad) => {
-        return axios.post(
-          'http://localhost:8080/api/mesas',
-          {
-            capacidad: parseInt(capacidad),
-            status: 'DISPONIBLE',
-            zona_id: zonaId
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-      });
-
-      await Promise.all(mesasPromises);
-
       this.setState({
         success: `Zona "${nombreZona}" creada correctamente con ${cantidadMesas} mesas`,
         nombreZona: '',

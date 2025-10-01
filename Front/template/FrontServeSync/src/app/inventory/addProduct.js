@@ -45,8 +45,6 @@ export class AddProduct extends Component {
         empresaID
       };
 
-      console.log(payload)
-
       const response = await axios.post(
         'http://localhost:8080/api/inventario',
         payload,
