@@ -19,8 +19,6 @@ public class ZonaService {
         return zonaRepository.findAllByEmpresaId(empresaId);
     }
     public Zona crearZona(Zona zona) {
-        Long empresaId = TenantContext.getCurrentTenant();
-        zona.setEmpresaId(empresaId);
         return zonaRepository.save(zona);
     }
     public void eliminarZona(int zonaId) {
