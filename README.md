@@ -1,2 +1,0 @@
-# ServeSync
-Proyecto de Título
