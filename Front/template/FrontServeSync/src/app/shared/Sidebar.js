@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Collapse } from 'react-bootstrap';
-import { Dropdown } from 'react-bootstrap';
+import { Collapse, Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -9,110 +8,124 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 class Sidebar extends Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
-      nombreZona: "",
       loading: true,
-      error: null
+      error: null,
+      zonas: [],
+      // Estados de menú
+      inventorySta: false,
+      zoneSta: false,
+      ordersMenuOpen: false,
+      basicUiMenuOpen: false,
+      formElementsMenuOpen: false,
+      tablesMenuOpen: false,
+      iconsMenuOpen: false,
+      chartsMenuOpen: false,
+      userPagesMenuOpen: false,
+      errorPagesMenuOpen: false,
     };
   }
 
+  componentDidMount() {
+    this.onRouteChanged();
+    this.cargarZonas(); // carga inicial de zonas
 
-
-  handleAddZone = async (e) => {
-  const token = localStorage.getItem("authToken");
-  const empresaID = parseInt(localStorage.getItem("userId")); // debe ser Long en backend
-
-  if (!empresaID) {
-    Swal.fire('Error', 'No se encontró el ID de la empresa', 'error');
-    return;
-  }
-
-  const { value: formValues } = await MySwal.fire({
-    title: 'Agregar nueva zona',
-    html: `
-      <div style="text-align:left">
-        <label for="swal-nombre"><strong>Nombre de la zona:</strong></label>
-        <input id="swal-nombre" class="swal2-input" placeholder="Nombre de zona">
-      </div>
-    `,
-    focusConfirm: false,
-    confirmButtonText: 'Agregar',
-    cancelButtonText: 'Cancelar',
-    showCancelButton: true,
-    preConfirm: () => {
-      const nombreZona = document.getElementById('swal-nombre').value.trim();
-      if (!nombreZona) {
-        Swal.showValidationMessage('Debes ingresar un nombre de zona');
-      }
-      return { nombreZona };
-    }
-  });
-
-  if (!formValues) return; // si canceló
-
-  try {
-    await axios.post('http://localhost:8080/api/mesas/zonas', {
-      nombreZona: formValues.nombreZona,
-      empresaId: empresaID
-      
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    Swal.fire({
-      icon: 'success',
-      title: 'Zona agregada',
-      text: `La zona "${formValues.nombreZona}" se agregó correctamente`
-    });
-
-    // Si tienes función para refrescar la lista de zonas en el sideba
-
-  } catch (error) {
-    console.error(error);
-    Swal.fire('Error', 'No se pudo agregar la zona', 'error');
-  }
-};
-
-  handleLogout = () =>{
-    localStorage.removeItem("authToken")
-    localStorage.removeItem("username")
-    localStorage.removeItem("userId")
-    localStorage.removeItem("rememberMe")
-
-    if (this.props.history) {
-      this.props.history.push("/login"); // si Sidebar recibe history de react-router
-    } else {
-      window.location.href = "/login"; // alternativa rápida
-    }
-  }
-
-
-  toggleMenuState(menuState) {
-    if (this.state[menuState]) {
-      this.setState({[menuState] : false});
-    } else if(Object.keys(this.state).length === 0) {
-      this.setState({[menuState] : true});
-    } else {
-      Object.keys(this.state).forEach(i => {
-        this.setState({[i]: false});
+    // hover en sidebar-icon-only
+    const body = document.querySelector('body');
+    document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+      el.addEventListener('mouseover', () => {
+        if(body.classList.contains('sidebar-icon-only')) el.classList.add('hover-open');
       });
-      this.setState({[menuState] : true});
+      el.addEventListener('mouseout', () => {
+        if(body.classList.contains('sidebar-icon-only')) el.classList.remove('hover-open');
+      });
+    });
+  }
+
+  cargarZonas = async () => {
+    const token = localStorage.getItem("authToken");
+    const empresaID = parseInt(localStorage.getItem("userId"));
+    if (!empresaID) return;
+
+    try {
+      const res = await axios.get(`http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      this.setState({ zonas: res.data, loading: false });
+    } catch (error) {
+      console.error(error);
+      this.setState({ error: 'No se pudieron cargar las zonas', loading: false });
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      this.onRouteChanged();
-    }
-  }
+  handleAddZone = async () => {
+    const token = localStorage.getItem("authToken");
+    const empresaID = parseInt(localStorage.getItem("userId"));
 
-  onRouteChanged() {
-    document.querySelector('#sidebar').classList.remove('active');
-    Object.keys(this.state).forEach(i => {
-      this.setState({[i]: false});
+    if (!empresaID) {
+      Swal.fire('Error', 'No se encontró el ID de la empresa', 'error');
+      return;
+    }
+
+    const { value: formValues } = await MySwal.fire({
+      title: 'Agregar nueva zona',
+      html: `
+        <div style="text-align:left">
+          <label for="swal-nombre"><strong>Nombre de la zona:</strong></label>
+          <input id="swal-nombre" class="swal2-input" placeholder="Nombre de zona">
+        </div>
+      `,
+      focusConfirm: false,
+      confirmButtonText: 'Agregar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      preConfirm: () => {
+        const nombreZona = document.getElementById('swal-nombre').value.trim();
+        if (!nombreZona) Swal.showValidationMessage('Debes ingresar un nombre de zona');
+        return { nombreZona };
+      }
     });
 
+    if (!formValues) return;
+
+    try {
+      await axios.post('http://localhost:8080/api/mesas/zonas', {
+        nombreZona: formValues.nombreZona,
+        empresaId: empresaID
+      }, { headers: { Authorization: `Bearer ${token}` } });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Zona agregada',
+        text: `La zona "${formValues.nombreZona}" se agregó correctamente`
+      });
+
+      this.cargarZonas(); // refresca la lista
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error', 'No se pudo agregar la zona', 'error');
+    }
+  }
+
+  handleLogout = () => {
+    localStorage.clear();
+    if (this.props.history) this.props.history.push("/login");
+    else window.location.href = "/login";
+  }
+
+  toggleMenuState = (menuState) => {
+    const newState = {};
+    Object.keys(this.state).forEach(key => {
+      if(key.endsWith('MenuOpen') || key.endsWith('Sta')) newState[key] = false;
+    });
+    newState[menuState] = !this.state[menuState];
+    this.setState(newState);
+  }
+
+  onRouteChanged = () => {
+    document.querySelector('#sidebar').classList.remove('active');
     const dropdownPaths = [
       {path:'/apps', state: 'appsMenuOpen'},
       {path:'/inventory', state: 'inventorySta'},
@@ -125,22 +138,25 @@ class Sidebar extends Component {
       {path:'/user-pages', state: 'userPagesMenuOpen'},
       {path:'/error-pages', state: 'errorPagesMenuOpen'},
     ];
+    dropdownPaths.forEach(obj => {
+      if(this.isPathActive(obj.path)) this.setState({[obj.state]: true});
+    });
+  }
 
-    dropdownPaths.forEach((obj => {
-      if (this.isPathActive(obj.path)) {
-        this.setState({[obj.state] : true})
-      }
-    }));
- 
-  } 
-  render () {
+  isPathActive = (path) => this.props.location.pathname.startsWith(path);
+
+  render() {
+    const { zonas, loading, error } = this.state;
+
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
           <a className="sidebar-brand brand-logo" href="index.html"><img src={require("../../assets/images/a.png")} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../../assets/images/logo-mini.svg" )} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../../assets/images/logo-mini.svg")} alt="logo" /></a>
         </div>
+
         <ul className="nav">
+          {/* Perfil */}
           <li className="nav-item nav-profile not-navigation-link">
             <div className="nav-link">
               <Dropdown>
@@ -150,106 +166,81 @@ class Sidebar extends Component {
                       <p className="profile-name">{localStorage.getItem("username") || "Invitado"}</p>
                       <p className="designation">Main user</p>
                     </div>
-                    
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="preview-list navbar-dropdown">
-                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={evt =>evt.preventDefault()}>
-                    <Trans>Ajuste de la cuenta</Trans>
-                  </Dropdown.Item>
-                  <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={this.handleLogout}>
-                    <Trans>Cerrar Sesion</Trans>
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={e => e.preventDefault()}><Trans>Ajuste de la cuenta</Trans></Dropdown.Item>
+                  <Dropdown.Item onClick={this.handleLogout}><Trans>Cerrar Sesion</Trans></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
           </li>
+
+          {/* Inicio */}
           <li className={ this.isPathActive('/home') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/homeee/home">
               <i className="mdi mdi-home menu-icon"></i>
               <span className="menu-title"><Trans>Inicio</Trans></span>
             </Link>
           </li>
+
+          {/* Inventario */}
           <li className={ this.isPathActive('/inventory') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.inventorySta ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('inventorySta') } data-toggle="collapse">
+            <div className={ this.state.inventorySta ? 'nav-link menu-expanded' : 'nav-link' } onClick={() => this.toggleMenuState('inventorySta')}>
               <i className="mdi mdi-crosshairs-gps menu-icon"></i>
               <span className="menu-title"><Trans>Inventario</Trans></span>
               <i className="menu-arrow"></i>
             </div>
             <Collapse in={ this.state.inventorySta }>
               <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/inventory/inventoryManage') ? 'nav-link active' : 'nav-link' } to="/inventory/inventoryManage"><Trans>Lista de productos</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/inventory/addProduct') ? 'nav-link active' : 'nav-link' } to="/inventory/addProduct"><Trans><i className='mdi mdi-plus'></i> Agregar producto nuevo</Trans></Link></li>
+                <li className="nav-item"><Link className={ this.isPathActive('/inventory/inventoryManage') ? 'nav-link active' : 'nav-link' } to="/inventory/inventoryManage"><Trans>Lista de productos</Trans></Link></li>
+                <li className="nav-item"><Link className={ this.isPathActive('/inventory/addProduct') ? 'nav-link active' : 'nav-link' } to="/inventory/addProduct"><Trans><i className='mdi mdi-plus'></i> Agregar producto nuevo</Trans></Link></li>
               </ul>
             </Collapse>
           </li>
+
+          {/* Zonas */}
           <li className={ this.isPathActive('/zone') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.zoneSta ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('zoneSta') } data-toggle="collapse">
+            <div className={ this.state.zoneSta ? 'nav-link menu-expanded' : 'nav-link' } onClick={() => this.toggleMenuState('zoneSta')}>
               <i className="mdi mdi-crosshairs-gps menu-icon"></i>
               <span className="menu-title"><Trans>Zonas de mesas</Trans></span>
               <i className="menu-arrow"></i>
             </div>
             <Collapse in={ this.state.zoneSta }>
               <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/zones/zone') ? 'nav-link active' : 'nav-link' } to="/zones/zone"><Trans>Zona 1</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/zones/zone') ? 'nav-link active' : 'nav-link' } to="/zones/zone"><Trans>Zona 2</Trans></Link></li>
-                <li className="nav-item"> <a href="#!" className="nav-link" onClick={this.handleAddZone}>
-        <i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans>
-      </a></li>
+                {loading && <li className="nav-item"><span className="nav-link text-muted"><Trans>Cargando zonas...</Trans></span></li>}
+                {error && <li className="nav-item"><span className="nav-link text-danger">{error}</span></li>}
+                {!loading && zonas.length > 0 ? zonas.map(zona => (
+                  <li key={zona.id} className="nav-item">
+                    <Link className={ this.isPathActive(`/zones/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' } to={`/zones/zone/${zona.id}`}>
+                      <Trans>{zona.nombreZona}</Trans>
+                    </Link>
+                  </li>
+                )) : !loading && (
+                  <li className="nav-item"><span className="nav-link text-muted"><Trans>Sin zonas</Trans></span></li>
+                )}
+                <li className="nav-item">
+                  <a href="#!" className="nav-link" onClick={this.handleAddZone}><i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans></a>
+                </li>
               </ul>
             </Collapse>
           </li>
+
+          {/* Pedidos */}
           <li className={ this.isPathActive('/orderPage') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.ordersMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('ordersMenuOpen') } data-toggle="collapse">
+            <div className={ this.state.ordersMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={() => this.toggleMenuState('ordersMenuOpen')}>
               <i className="mdi mdi-television menu-icon"></i>
               <span className="menu-title"><Trans>Pedidos</Trans></span>
               <i className="menu-arrow"></i>
             </div>
             <Collapse in={ this.state.ordersMenuOpen }>
               <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/orderPage/order') ? 'nav-link active' : 'nav-link' } to="/orderPage/order"><Trans>Lista de pedidos</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/orderPage/addOrder') ? 'nav-link active' : 'nav-link' } to="/orderPage/addOrder"><Trans><i className='mdi mdi-plus'></i> Agregar pedido</Trans></Link></li>
+                <li className="nav-item"><Link className={ this.isPathActive('/orderPage/order') ? 'nav-link active' : 'nav-link' } to="/orderPage/order"><Trans>Lista de pedidos</Trans></Link></li>
+                <li className="nav-item"><Link className={ this.isPathActive('/orderPage/addOrder') ? 'nav-link active' : 'nav-link' } to="/orderPage/addOrder"><Trans><i className='mdi mdi-plus'></i> Agregar pedido</Trans></Link></li>
               </ul>
             </Collapse>
           </li>
-          <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('basicUiMenuOpen') } data-toggle="collapse">
-              <i className="mdi mdi-crosshairs-gps menu-icon"></i>
-              <span className="menu-title"><Trans>Basic UI Elements</Trans></span>
-              <i className="menu-arrow"></i>
-            </div>
-            <Collapse in={ this.state.basicUiMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/buttons') ? 'nav-link active' : 'nav-link' } to="/basic-ui/buttons"><Trans>Buttons</Trans></Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/dropdowns') ? 'nav-link active' : 'nav-link' } to="/basic-ui/dropdowns"><Trans>Dropdowns</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li>
-          <li className={ this.isPathActive('/form-elements') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.formElementsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('formElementsMenuOpen') } data-toggle="collapse">
-              <i className="mdi mdi-format-list-bulleted menu-icon"></i>
-              <span className="menu-title"><Trans>Form Elements</Trans></span>
-              <i className="menu-arrow"></i>
-            </div>
-            <Collapse in={ this.state.formElementsMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/form-elements/basic-elements') ? 'nav-link active' : 'nav-link' } to="/form-elements/basic-elements"><Trans>Basic Elements</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li>
-          <li className={ this.isPathActive('/tables') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.tablesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('tablesMenuOpen') } data-toggle="collapse">
-              <i className="mdi mdi-table-large menu-icon"></i>
-              <span className="menu-title"><Trans>Tables</Trans></span>
-              <i className="menu-arrow"></i>
-            </div>
-            <Collapse in={ this.state.tablesMenuOpen }>
-              <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/tables/basic-table') ? 'nav-link active' : 'nav-link' } to="/tables/basic-table"><Trans>Basic Table</Trans></Link></li>
-              </ul>
-            </Collapse>
-          </li>
-          <li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>
+<li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.iconsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('iconsMenuOpen') } data-toggle="collapse">
               <i className="mdi mdi-account-box-outline menu-icon"></i>
               <span className="menu-title"><Trans>Icons</Trans></span>
@@ -305,34 +296,47 @@ class Sidebar extends Component {
               <span className="menu-title"><Trans>Documentation</Trans></span>
             </a>
           </li>
+                    <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
+            <div className={ this.state.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('basicUiMenuOpen') } data-toggle="collapse">
+              <i className="mdi mdi-crosshairs-gps menu-icon"></i>
+              <span className="menu-title"><Trans>Basic UI Elements</Trans></span>
+              <i className="menu-arrow"></i>
+            </div>
+            <Collapse in={ this.state.basicUiMenuOpen }>
+              <ul className="nav flex-column sub-menu">
+                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/buttons') ? 'nav-link active' : 'nav-link' } to="/basic-ui/buttons"><Trans>Buttons</Trans></Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/basic-ui/dropdowns') ? 'nav-link active' : 'nav-link' } to="/basic-ui/dropdowns"><Trans>Dropdowns</Trans></Link></li>
+              </ul>
+            </Collapse>
+          </li>
+          <li className={ this.isPathActive('/form-elements') ? 'nav-item active' : 'nav-item' }>
+            <div className={ this.state.formElementsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('formElementsMenuOpen') } data-toggle="collapse">
+              <i className="mdi mdi-format-list-bulleted menu-icon"></i>
+              <span className="menu-title"><Trans>Form Elements</Trans></span>
+              <i className="menu-arrow"></i>
+            </div>
+            <Collapse in={ this.state.formElementsMenuOpen }>
+              <ul className="nav flex-column sub-menu">
+                <li className="nav-item"> <Link className={ this.isPathActive('/form-elements/basic-elements') ? 'nav-link active' : 'nav-link' } to="/form-elements/basic-elements"><Trans>Basic Elements</Trans></Link></li>
+              </ul>
+            </Collapse>
+          </li>
+          <li className={ this.isPathActive('/tables') ? 'nav-item active' : 'nav-item' }>
+            <div className={ this.state.tablesMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('tablesMenuOpen') } data-toggle="collapse">
+              <i className="mdi mdi-table-large menu-icon"></i>
+              <span className="menu-title"><Trans>Tables</Trans></span>
+              <i className="menu-arrow"></i>
+            </div>
+            <Collapse in={ this.state.tablesMenuOpen }>
+              <ul className="nav flex-column sub-menu">
+                <li className="nav-item"> <Link className={ this.isPathActive('/tables/basic-table') ? 'nav-link active' : 'nav-link' } to="/tables/basic-table"><Trans>Basic Table</Trans></Link></li>
+              </ul>
+            </Collapse>
+          </li>
         </ul>
       </nav>
     );
   }
-
-  isPathActive(path) {
-    return this.props.location.pathname.startsWith(path);
-  }
-
-  componentDidMount() {
-    this.onRouteChanged();
-    // add className 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
-    const body = document.querySelector('body');
-    document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
-      
-      el.addEventListener('mouseover', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
-          el.classList.add('hover-open');
-        }
-      });
-      el.addEventListener('mouseout', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
-          el.classList.remove('hover-open');
-        }
-      });
-    });
-  }
-
 }
 
 export default withRouter(Sidebar);

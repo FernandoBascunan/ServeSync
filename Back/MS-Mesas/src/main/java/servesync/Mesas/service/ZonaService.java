@@ -14,16 +14,14 @@ import java.util.List;
 public class ZonaService {
     @Autowired
     ZonaRepository zonaRepository;
-    public List<Zona> getZona() {
-        Long empresaId = TenantContext.getCurrentTenant();
-        return zonaRepository.findAllByEmpresaId(empresaId);
-    }
     public Zona crearZona(Zona zona) {
         return zonaRepository.save(zona);
     }
     public void eliminarZona(int zonaId) {
         zonaRepository.deleteById(zonaId);
     }
-
+    public List<Zona> getZonaByEmpresa(Long empresaId) {
+        return zonaRepository.findByEmpresaId(empresaId);
+    }
 
 }

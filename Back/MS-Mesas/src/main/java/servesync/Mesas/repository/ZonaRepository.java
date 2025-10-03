@@ -6,5 +6,6 @@ import servesync.Mesas.entity.Zona;
 import java.util.List;
 
 public interface ZonaRepository extends JpaRepository<Zona, Integer> {
-    List<Zona> findAllByEmpresaId(Long empresaId);
+    List<Zona> findByEmpresaId(Long empresaId);
 }
+

@@ -7,12 +7,36 @@ import Sidebar from './shared/Sidebar';
 import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
+import axios from 'axios';
 
 class App extends Component {
-  state = {}
+  state = {
+    zonas: [],           // <-- nuevo estado
+    isFullPageLayout: false
+  };
+
+  cargarZonas = async () => {
+    const empresaID = parseInt(localStorage.getItem("userId"));
+    const token = localStorage.getItem("authToken");
+    if (!empresaID || !token) return;
+
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      this.setState({ zonas: res.data });
+    } catch (err) {
+      console.error("Error cargando zonas:", err);
+    }
+  };
+
   componentDidMount() {
     this.onRouteChanged();
+    this.cargarZonas(); // carga inicial de zonas
   }
+
+  
   render () {
     let navbarComponent = !this.state.isFullPageLayout ? <Navbar/> : '';
     let sidebarComponent = !this.state.isFullPageLayout ? <Sidebar/> : '';
