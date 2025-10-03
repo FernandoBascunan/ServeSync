@@ -9,7 +9,6 @@ const Inventory = lazy(() => import('./inventory/inventoryManage'))
 const addProduct = lazy(() => import('./inventory/addProduct'))
 
 const Zone = lazy(() => import('./zonePage/zone'))
-const AddZone = lazy(() => import('./zonePage/addzone'))
 
 const Orders = lazy(() => import('./orderPage/order'))
 const AddOrder = lazy(() => import('./orderPage/addOrder'))
@@ -42,8 +41,7 @@ class AppRoutes extends Component {
           <Route exact path="/inventory/inventoryManage" component={ Inventory } />
           <Route exact path="/inventory/addProduct" component={ addProduct } />
 
-          <Route exact path="/zones/zone" component={ Zone } />
-          <Route exact path="/zones/addZone" component={ AddZone } />
+          <Route path="/zonePage/zone/:id" component={ Zone } />
 
           <Route exact path="/orderPage/order" component={ Orders } />
           <Route exact path="/orderPage/addOrder" component={ AddOrder } />

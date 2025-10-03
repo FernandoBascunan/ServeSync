@@ -20,7 +20,7 @@ public class MesaController {
     public void eliminarMesa(@PathVariable int id) {
         mesaService.eliminarMesa(id);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/{zonaId}")
     public List<Mesa> mesasPorZona(@PathVariable int zonaId) {
          return mesaService.mostrarMesas(zonaId);
     }

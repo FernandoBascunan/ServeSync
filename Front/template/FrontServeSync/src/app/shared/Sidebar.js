@@ -7,13 +7,14 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
+
 class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      error: null,
-      zonas: [],
+      isFullPageLayout: false,
+      loadingZonas: true,
+      errorZonas: null,
       // Estados de menú
       inventorySta: false,
       zoneSta: false,
@@ -30,7 +31,6 @@ class Sidebar extends Component {
 
   componentDidMount() {
     this.onRouteChanged();
-    this.cargarZonas(); // carga inicial de zonas
 
     // hover en sidebar-icon-only
     const body = document.querySelector('body');
@@ -42,22 +42,6 @@ class Sidebar extends Component {
         if(body.classList.contains('sidebar-icon-only')) el.classList.remove('hover-open');
       });
     });
-  }
-
-  cargarZonas = async () => {
-    const token = localStorage.getItem("authToken");
-    const empresaID = parseInt(localStorage.getItem("userId"));
-    if (!empresaID) return;
-
-    try {
-      const res = await axios.get(`http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      this.setState({ zonas: res.data, loading: false });
-    } catch (error) {
-      console.error(error);
-      this.setState({ error: 'No se pudieron cargar las zonas', loading: false });
-    }
   }
 
   handleAddZone = async () => {
@@ -146,7 +130,8 @@ class Sidebar extends Component {
   isPathActive = (path) => this.props.location.pathname.startsWith(path);
 
   render() {
-    const { zonas, loading, error } = this.state;
+    const { zonas, loading, error } = this.props;
+
 
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
@@ -208,16 +193,28 @@ class Sidebar extends Component {
             </div>
             <Collapse in={ this.state.zoneSta }>
               <ul className="nav flex-column sub-menu">
-                {loading && <li className="nav-item"><span className="nav-link text-muted"><Trans>Cargando zonas...</Trans></span></li>}
-                {error && <li className="nav-item"><span className="nav-link text-danger">{error}</span></li>}
-                {!loading && zonas.length > 0 ? zonas.map(zona => (
-                  <li key={zona.id} className="nav-item">
-                    <Link className={ this.isPathActive(`/zones/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' } to={`/zones/zone/${zona.id}`}>
-                      <Trans>{zona.nombreZona}</Trans>
-                    </Link>
+                { loading && (
+                  <li className="nav-item">
+                    <span className="nav-link text-muted"><Trans>Cargando zonas...</Trans></span>
                   </li>
-                )) : !loading && (
-                  <li className="nav-item"><span className="nav-link text-muted"><Trans>Sin zonas</Trans></span></li>
+                )}
+                { error && (
+                  <li className="nav-item">
+                    <span className="nav-link text-danger">{error}</span>
+                  </li>
+                )}
+                { !loading && (!zonas || zonas.length === 0) ? (
+                  <li className="nav-item">
+                    <span className="nav-link text-muted"><Trans>Sin zonas</Trans></span>
+                  </li>
+                ) : (
+                  zonas.map(zona => (
+                    <li key={zona.id} className="nav-item">
+                      <Link className={ this.isPathActive(`/zonePage/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' } to={`/zonePage/zone/${zona.id}`}>
+                        <Trans>{zona.nombreZona}</Trans>
+                      </Link>
+                    </li>
+                  ))
                 )}
                 <li className="nav-item">
                   <a href="#!" className="nav-link" onClick={this.handleAddZone}><i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans></a>
@@ -240,7 +237,7 @@ class Sidebar extends Component {
               </ul>
             </Collapse>
           </li>
-<li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>
+          <li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.iconsMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('iconsMenuOpen') } data-toggle="collapse">
               <i className="mdi mdi-account-box-outline menu-icon"></i>
               <span className="menu-title"><Trans>Icons</Trans></span>

@@ -10,26 +10,29 @@ import { withTranslation } from "react-i18next";
 import axios from 'axios';
 
 class App extends Component {
-  state = {
-    zonas: [],           // <-- nuevo estado
-    isFullPageLayout: false
-  };
+state = {
+  zonas: [],
+  loadingZonas: true,
+  errorZonas: null,
+  isFullPageLayout: false
+};
 
-  cargarZonas = async () => {
-    const empresaID = parseInt(localStorage.getItem("userId"));
-    const token = localStorage.getItem("authToken");
-    if (!empresaID || !token) return;
+cargarZonas = async () => {
+  const empresaID = parseInt(localStorage.getItem("userId"));
+  const token = localStorage.getItem("authToken");
+  if (!empresaID || !token) return;
 
-    try {
-      const res = await axios.get(
-        `http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      this.setState({ zonas: res.data });
-    } catch (err) {
-      console.error("Error cargando zonas:", err);
-    }
-  };
+  try {
+    const res = await axios.get(
+      `http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    this.setState({ zonas: Array.isArray(res.data) ? res.data : [], loadingZonas: false });
+  } catch (err) {
+    console.error("Error cargando zonas:", err);
+    this.setState({ errorZonas: 'No se pudieron cargar las zonas', loadingZonas: false });
+  }
+};
 
   componentDidMount() {
     this.onRouteChanged();
@@ -39,7 +42,13 @@ class App extends Component {
   
   render () {
     let navbarComponent = !this.state.isFullPageLayout ? <Navbar/> : '';
-    let sidebarComponent = !this.state.isFullPageLayout ? <Sidebar/> : '';
+    let sidebarComponent = !this.state.isFullPageLayout ? (
+      <Sidebar 
+        zonas={this.state.zonas} 
+        loading={this.state.loadingZonas} 
+        error={this.state.errorZonas} 
+      />
+    ) : '';
     let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel/> : '';
     let footerComponent = !this.state.isFullPageLayout ? <Footer/> : '';
     return (
