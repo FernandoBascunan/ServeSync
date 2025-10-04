@@ -25,18 +25,15 @@ public class VentaService {
     private ProductoRepository productoRepository;
     @Autowired
     private VentaMapper ventaMapper;
-    public List<VentaResponseDTO> listar() {
-        Long empresaId = TenantContext.getCurrentTenant();
+    public List<VentaResponseDTO> listar(Long empresaId) {
         return ventaRepository.findByEmpresaID(empresaId)
                 .stream()
                 .map(ventaMapper::toDTO)
                 .collect(Collectors.toList());
     }
     public VentaResponseDTO registrarVenta(VentaDTO ventaDTO) {
-        Long empresaId = TenantContext.getCurrentTenant();
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDateTime.now());
-        venta.setEmpresaID(empresaId);
 
         for(detalleVentaDTO detalleDTO : ventaDTO.getDetalles()){
             Producto producto = productoRepository.findById(detalleDTO.getIdProducto())

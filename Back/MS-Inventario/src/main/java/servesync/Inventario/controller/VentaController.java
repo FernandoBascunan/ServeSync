@@ -10,13 +10,13 @@ import servesync.Inventario.service.VentaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/ventas")
+@RequestMapping("/api/ventas")
 public class VentaController {
     @Autowired
     private VentaService ventaService;
-    @GetMapping
-    public ResponseEntity<List<VentaResponseDTO>> listarVentas() {
-        List<VentaResponseDTO> ventas = ventaService.listar();
+    @GetMapping("/{empresaId}")
+    public ResponseEntity<List<VentaResponseDTO>> listarVentas(@PathVariable Long empresaId) {
+        List<VentaResponseDTO> ventas = ventaService.listar(empresaId);
         return ResponseEntity.ok(ventas);
     }
     @PutMapping
