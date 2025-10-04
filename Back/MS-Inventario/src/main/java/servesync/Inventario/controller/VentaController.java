@@ -10,7 +10,7 @@ import servesync.Inventario.service.VentaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ventas")
+@RequestMapping("api/ventas")
 public class VentaController {
     @Autowired
     private VentaService ventaService;
@@ -19,7 +19,7 @@ public class VentaController {
         List<VentaResponseDTO> ventas = ventaService.listar(empresaId);
         return ResponseEntity.ok(ventas);
     }
-    @PutMapping
+    @PostMapping
     public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody  VentaDTO ventaDTO) {
         VentaResponseDTO nuevaVenta = ventaService.registrarVenta(ventaDTO);
         return ResponseEntity.ok(nuevaVenta);

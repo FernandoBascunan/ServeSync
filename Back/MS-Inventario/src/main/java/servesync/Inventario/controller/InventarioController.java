@@ -2,10 +2,12 @@ package servesync.Inventario.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import servesync.Inventario.dto.ProductoDTO;
 import servesync.Inventario.entity.Producto;
 import servesync.Inventario.service.ProductoService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/inventario")
@@ -31,8 +33,19 @@ public class InventarioController {
     }
 
     @GetMapping("/{empresaID}")
-    public List<Producto> mostrarStockPorEmpresa(@PathVariable Long empresaID) {
-        return productoService.listarProductosPorEmpresa(empresaID);
+    public List<ProductoDTO> mostrarStockPorEmpresa(@PathVariable Long empresaID) {
+        List<Producto> productos = productoService.listarProductosPorEmpresa(empresaID);
+
+        return productos.stream()
+                .map(p -> new ProductoDTO(
+                        p.getId(),
+                        p.getNombre(),
+                        p.getStockActual(),
+                        p.getPrecio(),
+                        p.getCategoria(),
+                        p.getEmpresaID()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

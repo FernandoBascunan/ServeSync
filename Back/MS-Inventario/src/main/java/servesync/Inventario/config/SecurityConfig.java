@@ -9,23 +9,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-@Value("${JWT_SECRET}")
-private String jwtSecret;
+    @Value("${JWT_SECRET}")
+    private String jwtSecret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/inventario/**","/api/ordenCompra/**","/api/ventas/**").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtSecret),
-                        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+                        .anyRequest().permitAll()  // Permitir todos los endpoints
                 );
 
         return http.build();
     }
-
-
 }

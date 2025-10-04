@@ -34,8 +34,9 @@ public class VentaService {
     public VentaResponseDTO registrarVenta(VentaDTO ventaDTO) {
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDateTime.now());
+        venta.setEmpresaID(ventaDTO.getEmpresaID()); // ✅ tomar empresaID desde el body
 
-        for(detalleVentaDTO detalleDTO : ventaDTO.getDetalles()){
+        for(detalleVentaDTO detalleDTO : ventaDTO.getDetalles()) {
             Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
                     .orElseThrow(() -> new RuntimeException(
                             "Producto no encontrado con ID: " + detalleDTO.getIdProducto()
@@ -45,7 +46,7 @@ public class VentaService {
                 throw new RuntimeException("Stock insuficiente para el producto: " + producto.getNombre());
             }
 
-            DetalleVenta detalle=new DetalleVenta();
+            DetalleVenta detalle = new DetalleVenta();
             detalle.setProducto(producto);
             detalle.setCantidad(detalleDTO.getCantidad());
             detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
@@ -55,8 +56,8 @@ public class VentaService {
             producto.setStockActual(producto.getStockActual() - detalleDTO.getCantidad());
             productoRepository.save(producto);
         }
+
         Venta guardada = ventaRepository.save(venta);
         return ventaMapper.toDTO(guardada);
     }
-
 }

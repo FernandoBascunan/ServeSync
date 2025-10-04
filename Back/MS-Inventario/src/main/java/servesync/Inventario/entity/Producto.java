@@ -30,6 +30,7 @@ public class Producto {
     private Long empresaID;
 
     @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL,orphanRemoval = true)
+
     private List<DetalleVenta> ventas=new ArrayList<>();
 
     @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL, orphanRemoval = true)
