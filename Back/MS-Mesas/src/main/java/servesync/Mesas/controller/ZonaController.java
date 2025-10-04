@@ -23,10 +23,16 @@ public class ZonaController {
     public void eliminarZona(@PathVariable int zonaId) {
         zonaService.eliminarZona(zonaId);
     }
+
     @PostMapping("/empresa")
     public List<Zona> getAllZonesByEmpresa(@RequestBody Map<String, Long> body) {
         Long empresaId = body.get("empresaId");
         return zonaService.getZonaByEmpresa(empresaId);
     }
 
+    // 🔹 Obtener zonas por empresa (GET)
+    @GetMapping("/empresa")
+    public List<Zona> getZonasByEmpresa(@RequestParam Long empresaId) {
+        return zonaService.getZonaByEmpresa(empresaId);
+    }
 }
