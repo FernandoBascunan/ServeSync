@@ -13,9 +13,6 @@ class Sidebar extends Component {
     super(props);
     this.state = {
       isFullPageLayout: false,
-      loadingZonas: true,
-      errorZonas: null,
-      // Estados de menú
       inventorySta: false,
       zoneSta: false,
       ordersMenuOpen: false,
@@ -29,10 +26,21 @@ class Sidebar extends Component {
     };
   }
 
+  handleZonaSeleccionada = (idZona) => {
+    localStorage.setItem('zonaSeleccionada', idZona);
+    console.log('Zona seleccionada guardada en localStorage:', idZona);
+  };
+
   componentDidMount() {
     this.onRouteChanged();
 
     // hover en sidebar-icon-only
+    const idGuardado = localStorage.getItem('zonaSeleccionada');
+    if (idGuardado) {
+      console.log('Última zona seleccionada:', idGuardado);
+      // 👉 Si quieres redirigir automáticamente a esa zona:
+      // this.props.history.push(`/zonePage/zone/${idGuardado}`);
+    }
     const body = document.querySelector('body');
     document.querySelectorAll('.sidebar .nav-item').forEach(el => {
       el.addEventListener('mouseover', () => {
@@ -86,7 +94,7 @@ class Sidebar extends Component {
         text: `La zona "${formValues.nombreZona}" se agregó correctamente`
       });
 
-      this.cargarZonas(); // refresca la lista
+      this.props.cargarZonas(); // refresca la lista
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'No se pudo agregar la zona', 'error');
@@ -186,38 +194,44 @@ class Sidebar extends Component {
 
           {/* Zonas */}
           <li className={ this.isPathActive('/zone') ? 'nav-item active' : 'nav-item' }>
-            <div className={ this.state.zoneSta ? 'nav-link menu-expanded' : 'nav-link' } onClick={() => this.toggleMenuState('zoneSta')}>
+            <div className={ this.state.zoneSta ? 'nav-link menu-expanded' : 'nav-link' } 
+                onClick={() => this.toggleMenuState('zoneSta')}>
               <i className="mdi mdi-crosshairs-gps menu-icon"></i>
               <span className="menu-title"><Trans>Zonas de mesas</Trans></span>
               <i className="menu-arrow"></i>
             </div>
             <Collapse in={ this.state.zoneSta }>
               <ul className="nav flex-column sub-menu">
-                { loading && (
+                {loading && (
                   <li className="nav-item">
                     <span className="nav-link text-muted"><Trans>Cargando zonas...</Trans></span>
                   </li>
                 )}
-                { error && (
+                {error && (
                   <li className="nav-item">
                     <span className="nav-link text-danger">{error}</span>
                   </li>
                 )}
-                { !loading && (!zonas || zonas.length === 0) ? (
+                {!loading && !error && zonas.length === 0 && (
                   <li className="nav-item">
                     <span className="nav-link text-muted"><Trans>Sin zonas</Trans></span>
                   </li>
-                ) : (
-                  zonas.map(zona => (
-                    <li key={zona.id} className="nav-item">
-                      <Link className={ this.isPathActive(`/zonePage/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' } to={`/zonePage/zone/${zona.id}`}>
-                        <Trans>{zona.nombreZona}</Trans>
-                      </Link>
-                    </li>
-                  ))
                 )}
+                {!loading && !error && zonas.length > 0 && zonas.map(zona => (
+                  <li key={zona.id} className="nav-item">
+                    <Link
+                      className={ this.isPathActive(`/zonePage/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' }
+                      to={`/zonePage/zone/${zona.id}`}
+                      onClick={() => this.handleZonaSeleccionada(zona.id)}
+                    >
+                      <Trans>{zona.nombreZona}</Trans>
+                    </Link>
+                  </li>
+                ))}
                 <li className="nav-item">
-                  <a href="#!" className="nav-link" onClick={this.handleAddZone}><i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans></a>
+                  <a href="#!" className="nav-link" onClick={this.handleAddZone}>
+                    <i className='mdi mdi-plus'></i> <Trans>Agregar zona nueva</Trans>
+                  </a>
                 </li>
               </ul>
             </Collapse>

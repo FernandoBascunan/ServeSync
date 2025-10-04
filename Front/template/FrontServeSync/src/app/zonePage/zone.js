@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export class Zone extends Component {
   constructor(props) {
@@ -15,6 +16,34 @@ export class Zone extends Component {
       capacidades: [] // arreglo con capacidad por mesa
     };
   }
+
+  async componentDidMount() {
+  // 🟢 Detectar zona actual
+  const zonaId = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
+
+  if (!zonaId) {
+    console.warn("No se encontró el ID de zona.");
+    return;
+  }
+
+  try {
+    // 🟦 Cargar mesas desde backend
+    const response = await axios.get(`http://localhost:8080/api/mesas/${zonaId}`);
+
+    if (response.data && response.data.length > 0) {
+      console.log("Mesas encontradas:", response.data);
+      this.setState({ mesas: response.data });
+    } else {
+      console.log("Zona sin mesas, mostrando formulario de creación.");
+      this.setState({ mesas: [] });
+    }
+
+  } catch (error) {
+    console.error("Error al cargar mesas:", error);
+    this.setState({ mesas: [] });
+  }
+}
+
 
   handleMesaClick = (mesa) => {
     this.setState({
@@ -60,24 +89,45 @@ export class Zone extends Component {
   }
 
   // ---- NUEVA LÓGICA ----
-  handleCrearMesas = () => {
-    const { cantidadMesas, capacidades } = this.state;
+  handleCrearMesas = async () => {
+  const { cantidadMesas, capacidades } = this.state;
+  const zonaId = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
 
-    if (cantidadMesas <= 0) {
-      alert("Debe ingresar una cantidad válida de mesas.");
-      return;
+  if (!zonaId) {
+    alert("Debe seleccionar una zona antes de crear mesas.");
+    return;
+  }
+
+  if (cantidadMesas <= 0) {
+    alert("Debe ingresar una cantidad válida de mesas.");
+    return;
+  }
+
+  try {
+    const nuevasMesas = [];
+
+    for (let i = 0; i < cantidadMesas; i++) {
+      const nuevaMesa = {
+        nombre: `Mesa ${i + 1}`,
+        capacidad: capacidades[i] || 4,
+        ocupantes: 0,
+        zona: { id: parseInt(zonaId) }
+      };
+
+      await axios.post("http://localhost:8080/api/mesas", nuevaMesa);
     }
 
-    const nuevasMesas = Array.from({ length: cantidadMesas }, (_, i) => ({
-      id: i + 1,
-      grado: i + 1,
-      ocupacion: `0/${capacidades[i] || 4}`, // si no hay valor, default 4
-      ocupantes: 0,
-      capacidad: capacidades[i] || 4
-    }));
+    // 🟢 Después de crear, recarga desde el backend
+    const response = await axios.get(`http://localhost:8080/api/mesas/${zonaId}`);
+    this.setState({ mesas: response.data });
+    alert("Mesas creadas correctamente ✅");
 
-    this.setState({ mesas: nuevasMesas });
+  } catch (error) {
+    console.error("Error al crear mesas:", error);
+    alert("Hubo un error al crear las mesas. Revisa la consola.");
   }
+};
+
 
   render() {
     return (

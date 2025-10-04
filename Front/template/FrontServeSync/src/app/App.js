@@ -16,35 +16,41 @@ state = {
   loadingZonas: true,
   errorZonas: null,
   isFullPageLayout: false,
-  zonaSeleccionada: null // <--- nueva
-
 };
 
 cargarZonas = async () => {
   const empresaID = parseInt(localStorage.getItem("userId"));
   const token = localStorage.getItem("authToken");
-  if (!empresaID || !token) return;
+
+  if (!empresaID || !token) {
+    console.warn("No hay userId o authToken, no se cargan zonas");
+    this.setState({ loadingZonas: false }); // importante para no quedarse "cargando"
+    return;
+  }
+
+  this.setState({ loadingZonas: true, errorZonas: null });
 
   try {
-    const res = await axios.get(
+    const response = await axios.get(
       `http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    this.setState({ zonas: Array.isArray(res.data) ? res.data : [], loadingZonas: false });
-  } catch (err) {
-    console.error("Error cargando zonas:", err);
-    this.setState({ errorZonas: 'No se pudieron cargar las zonas', loadingZonas: false });
+
+    this.setState({ zonas: response.data, loadingZonas: false, errorZonas: null });
+
+  } catch (error) {
+    console.error("Error al cargar zonas:", error);
+    this.setState({ errorZonas: "No se pudieron cargar las zonas", loadingZonas: false });
   }
 };
 
-  componentDidMount() {
-    this.onRouteChanged();
-    this.cargarZonas(); // carga inicial de zonas
-  }
-  seleccionarZona = (zona) => {
-  this.setState({ zonaSeleccionada: zona });
-};
 
+componentDidMount() {
+  this.onRouteChanged();
+  console.log("userId:", localStorage.getItem("userId"));
+  console.log("authToken:", localStorage.getItem("authToken"));
+  this.cargarZonas(); // carga inicial de zonas
+  };
   
   render () {
     let navbarComponent = !this.state.isFullPageLayout ? <Navbar/> : '';
@@ -54,13 +60,8 @@ cargarZonas = async () => {
         loading={this.state.loadingZonas} 
         error={this.state.errorZonas} 
         cargarZonas={this.cargarZonas}
-            seleccionarZona={this.seleccionarZona} // <-- PASAMOS LA FUNCIÓN
       />
     ) : '';
-let zoneComponent = !this.state.isFullPageLayout && this.state.zonaSeleccionada ? (
-  <Zone zonaId={this.state.zonaSeleccionada} />
-) : '';
-
     let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel/> : '';
     let footerComponent = !this.state.isFullPageLayout ? <Footer/> : '';
     return (
