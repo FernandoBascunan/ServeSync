@@ -8,13 +8,16 @@ import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
 import axios from 'axios';
+import Zone from './zonePage/zone';
 
 class App extends Component {
 state = {
   zonas: [],
   loadingZonas: true,
   errorZonas: null,
-  isFullPageLayout: false
+  isFullPageLayout: false,
+  zonaSeleccionada: null // <--- nueva
+
 };
 
 cargarZonas = async () => {
@@ -38,6 +41,9 @@ cargarZonas = async () => {
     this.onRouteChanged();
     this.cargarZonas(); // carga inicial de zonas
   }
+  seleccionarZona = (zona) => {
+  this.setState({ zonaSeleccionada: zona });
+};
 
   
   render () {
@@ -47,8 +53,14 @@ cargarZonas = async () => {
         zonas={this.state.zonas} 
         loading={this.state.loadingZonas} 
         error={this.state.errorZonas} 
+        cargarZonas={this.cargarZonas}
+            seleccionarZona={this.seleccionarZona} // <-- PASAMOS LA FUNCIÓN
       />
     ) : '';
+let zoneComponent = !this.state.isFullPageLayout && this.state.zonaSeleccionada ? (
+  <Zone zonaId={this.state.zonaSeleccionada} />
+) : '';
+
     let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel/> : '';
     let footerComponent = !this.state.isFullPageLayout ? <Footer/> : '';
     return (
