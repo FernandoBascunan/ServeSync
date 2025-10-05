@@ -28,7 +28,7 @@ class Sidebar extends Component {
 
   handleZonaSeleccionada = (idZona) => {
     localStorage.setItem('zonaSeleccionada', idZona);
-    console.log('Zona seleccionada guardada en localStorage:', idZona);
+    console.log("ID SELECCIONADO", idZona)
   };
 
   componentDidMount() {
@@ -223,6 +223,7 @@ class Sidebar extends Component {
                       className={ this.isPathActive(`/zonePage/zone/${zona.id}`) ? 'nav-link active' : 'nav-link' }
                       to={`/zonePage/zone/${zona.id}`}
                       onClick={() => this.handleZonaSeleccionada(zona.id)}
+                      
                     >
                       <Trans>{zona.nombreZona}</Trans>
                     </Link>

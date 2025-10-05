@@ -6,30 +6,34 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      routes:
-        - id: users-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/usuarios/**
+      server:
+        webflux:
+          routes:
+            - id: users-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/usuarios/**
 
+            - id: inventario-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/inventario/**
+              filters:
+                - StripPrefix=0
 
-        - id: inventario-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/**
+            - id: mesas-service
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/mesas/**
+              filters:
+                - StripPrefix=0
 
-        - id: mesas-service
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/**
-
-
-        - id: prophet-service
-          uri: http://localhost:8000
-          predicates:
-            - Path=/api/prophet/**
-          filters:
-            - StripPrefix=2
+            - id: prophet-service
+              uri: http://localhost:8000
+              predicates:
+                - Path=/api/prophet/**
+              filters:
+                - StripPrefix=2
 
 
 logging:

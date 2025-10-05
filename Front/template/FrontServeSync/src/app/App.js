@@ -47,8 +47,6 @@ cargarZonas = async () => {
 
 componentDidMount() {
   this.onRouteChanged();
-  console.log("userId:", localStorage.getItem("userId"));
-  console.log("authToken:", localStorage.getItem("authToken"));
   this.cargarZonas(); // carga inicial de zonas
   };
   
