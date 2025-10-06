@@ -1,10 +1,9 @@
 package servesync.Mesas.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
-
 
 @Entity
 @Table(name= "zona")
@@ -17,5 +16,6 @@ public class Zona{
     private Long empresaId;
 
     @OneToMany(mappedBy = "zona", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference   // 👈 Agrega esta línea
     private List<Mesa> mesas;
 }

@@ -35,8 +35,11 @@ cargarZonas = async () => {
       `http://localhost:8080/api/mesas/zonas/empresa?empresaId=${empresaID}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
-
-    this.setState({ zonas: response.data, loadingZonas: false, errorZonas: null });
+    this.setState({ 
+      zonas: Array.isArray(response.data) ? response.data : (response.data.zonas || []), 
+      loadingZonas: false, 
+      errorZonas: null 
+    });
 
   } catch (error) {
     console.error("Error al cargar zonas:", error);
