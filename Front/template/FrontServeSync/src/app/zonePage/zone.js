@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './zone.scss'; // asegúrate de crear este archivo o importarlo en App.scss
 
 export class Zone extends Component {
   state = {
@@ -13,33 +12,42 @@ export class Zone extends Component {
     capacidades: []
   };
 
-  componentDidUpdate(prevProps) {
-    const zonaIdActual = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
-    const zonaIdAnterior = prevProps.match?.params?.id || localStorage.getItem('zonaSeleccionada');
+componentDidUpdate(prevProps) {
+  const zonaIdActual = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
+  const zonaIdAnterior = prevProps.match?.params?.id || localStorage.getItem('zonaSeleccionada');
 
-    if (zonaIdActual !== zonaIdAnterior) {
-      this.cargarMesasZona();
-    }
+  if (zonaIdActual !== zonaIdAnterior) {
+    this.cargarMesasZona(); // recarga mesas de la nueva zona
   }
+}
 
+
+  // --- Cargar mesas de la zona actual
   cargarMesasZona = async () => {
     const zonaId = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
-    if (!zonaId) return;
+    if (!zonaId) {
+      console.warn("No se encontró ID de zona");
+      return;
+    }
 
     try {
       const response = await axios.get(`http://localhost:8080/api/mesas/${zonaId}`);
       this.setState({ mesas: Array.isArray(response.data) ? response.data : [] });
+      console.log("Mesas cargadas:", response.data);
     } catch (error) {
       console.error("Error al cargar mesas:", error);
       this.setState({ mesas: [] });
     }
   };
 
+  // --- Guardar zona seleccionada
   handleZonaSeleccionada = (idZona) => {
     localStorage.setItem('zonaSeleccionada', idZona);
-    this.cargarMesasZona();
+    console.log("Zona seleccionada:", idZona);
+    this.cargarMesasZona(); // recarga mesas de la nueva zona
   };
 
+  // --- Abrir modal de edición de mesa
   handleMesaClick = (mesa) => {
     this.setState({
       mesaSeleccionada: mesa,
@@ -70,6 +78,7 @@ export class Zone extends Component {
     this.setState({ mesas: mesasActualizadas, mostrarModal: false, mesaSeleccionada: null });
   };
 
+  // --- Crear nuevas mesas dinámicamente
   handleCrearMesas = async () => {
     const { cantidadMesas, capacidades } = this.state;
     const zonaId = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
@@ -87,8 +96,9 @@ export class Zone extends Component {
         await axios.post("http://localhost:8080/api/mesas", nuevaMesa);
       }
 
-      await this.cargarMesasZona();
+      await this.cargarMesasZona(); // recarga mesas después de crear
       alert("Mesas creadas correctamente ✅");
+
     } catch (error) {
       console.error("Error al crear mesas:", error);
       alert("Hubo un error al crear las mesas");
@@ -99,14 +109,16 @@ export class Zone extends Component {
     const { mesas, mostrarModal, mesaSeleccionada, cantidadMesas, capacidades, ocupantesTemp, capacidadTemp } = this.state;
 
     return (
-      <div className="zone-container">
+      <div>
+        <h3>Mesas</h3>
+
+        {/* --- Si no hay mesas, formulario dinámico */}
         {mesas.length === 0 ? (
-          <div className="crear-mesas">
+          <div>
             <p>Esta zona no tiene mesas. Configure cuántas desea crear:</p>
 
             <input
               type="number"
-              placeholder="Cantidad de mesas"
               value={cantidadMesas}
               onChange={e => {
                 const cantidad = parseInt(e.target.value) || 0;
@@ -114,12 +126,11 @@ export class Zone extends Component {
               }}
               min="1"
               max="50"
-              className="input-principal"
             />
 
             {cantidadMesas > 0 && capacidades.map((cap, idx) => (
-              <div key={idx} className="input-grupo">
-                <label>Mesa {idx + 1}</label>
+              <div key={idx}>
+                <label>Mesa {idx + 1}:</label>
                 <input
                   type="number"
                   value={cap}
@@ -134,32 +145,27 @@ export class Zone extends Component {
               </div>
             ))}
 
-            <button className="btn-crear" onClick={this.handleCrearMesas}>Crear Mesas</button>
+            <button onClick={this.handleCrearMesas}>Crear Mesas</button>
           </div>
         ) : (
+          // --- Grid de mesas
           <div className="mesas-grid">
             {mesas.map(mesa => (
-              <div
-                key={mesa.id}
-                className="mesa-card"
-                onClick={() => this.handleMesaClick(mesa)}
-              >
-                <span className="mesa-numero">{mesa.id}°</span>
-                <span className="mesa-ocupacion">
-                  {mesa.ocupacion || `${mesa.ocupantes || 0}/${mesa.capacidad}`}
-                </span>
+              <div key={mesa.id} onClick={() => this.handleMesaClick(mesa)}>
+                <p>Mesa {mesa.id}</p>
+                <p>{mesa.ocupacion || `${mesa.ocupantes || 0}/${mesa.capacidad}`}</p>
               </div>
             ))}
           </div>
         )}
 
+        {/* --- Modal */}
         {mostrarModal && mesaSeleccionada && (
           <div className="modal-overlay">
             <div className="modal-content">
               <h5>Editar Mesa {mesaSeleccionada.id}</h5>
-              <button className="btn-cerrar" onClick={this.handleCerrarModal}>×</button>
-
-              <div className="modal-inputs">
+              <button onClick={this.handleCerrarModal}>Cerrar</button>
+              <div>
                 <label>Capacidad:</label>
                 <input
                   type="number"
@@ -168,6 +174,8 @@ export class Zone extends Component {
                   min="1"
                   max="20"
                 />
+              </div>
+              <div>
                 <label>Ocupantes:</label>
                 <input
                   type="number"
@@ -177,7 +185,7 @@ export class Zone extends Component {
                   max={capacidadTemp}
                 />
               </div>
-              <button className="btn-guardar" onClick={this.handleGuardarCambios}>Guardar</button>
+              <button onClick={this.handleGuardarCambios}>Guardar</button>
             </div>
           </div>
         )}

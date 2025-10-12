@@ -28,6 +28,7 @@ body {
     .main-panel {
       width: 100%;
       transition: none;
+      margin-top:-$navbar-height;
       .content-wrapper {
         padding: 0;
         > div {
@@ -42,6 +43,7 @@ body {
   transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
   width: calc(100% - #{$sidebar-width-lg});
   min-height: calc(100vh - #{$navbar-height});
+  padding-top: $navbar-height;
   @include display-flex();
   @include flex-direction(column);
   @media (max-width: 991px) {
@@ -198,7 +200,7 @@ code {
       display: inline-block;
 
       .toolbar-item {
-          margin-top: 10px;
+          margin-top: 20px;
       }
   }
 
