@@ -1,0 +1,143 @@
+.zone-container {
+  padding: 1rem 2rem;
+}
+
+/* ---- GRID MESAS ---- */
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.mesa-card {
+  background: #444;
+  color: white;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.mesa-card:hover {
+  background: #666;
+  transform: scale(1.05);
+}
+
+.mesa-numero {
+  font-size: 0.9rem;
+}
+
+.mesa-ocupacion {
+  font-size: 1.1rem;
+  margin-top: 0.3rem;
+}
+
+/* ---- FORMULARIO CREAR MESAS ---- */
+.crear-mesas {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 2rem auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.input-principal,
+.input-grupo input {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-principal:focus,
+.input-grupo input:focus {
+  border-color: #333;
+}
+
+.btn-crear {
+  width: 100%;
+  padding: 0.8rem;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-crear:hover {
+  background: #555;
+}
+
+/* ---- MODAL ---- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 320px;
+  position: relative;
+}
+
+.modal-inputs label {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.modal-inputs input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-guardar {
+  margin-top: 1rem;
+  background: #333;
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background: #555;
+}
+
+.btn-cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
