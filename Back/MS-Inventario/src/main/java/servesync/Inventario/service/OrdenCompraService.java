@@ -56,4 +56,8 @@ public class OrdenCompraService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrdenCompra> listarOrdenPorEmpresa(Long empresaId){
+        return ordenCompraRepository.findByEmpresaID(empresaId);
+    }
+
 }

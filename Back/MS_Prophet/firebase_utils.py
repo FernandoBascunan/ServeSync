@@ -2,7 +2,7 @@
 import firebase_admin
 from firebase_admin import credentials, storage
 
-cred = credentials.Certificate(r"C:\Users\nan_c\Documents\GitHub\ServeSync\Back\MS_Prophet\servesync-46af3-firebase-adminsdk-fbsvc-f81a9c80d6.json")
+cred = credentials.Certificate(r"C:\Users\nan_c\Documents\GitHub\ServeSync\Back\MS_Prophet\servesync-46af3-firebase-adminsdk-fbsvc-6e7cf6093b.json")
 
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'servesync-46af3.firebasestorage.app'

@@ -127,6 +127,286 @@ handleModifyItem = async (producto) => {
     Swal.fire('Error', 'No se pudo modificar el producto ❌', 'error');
   }
 };
+  handleProphetUI = async (producto) => {
+    // Pedir días de predicción al usuario
+    const { value: horizonDays } = await MySwal.fire({
+      title: `Predicción para ${producto.nombre}`,
+      html: `
+        <label for="swal-horizonDays"><strong>¿Cuántos días deseas predecir?(min. 5 días)</strong></label>
+        <input id="swal-horizonDays" type="number" class="swal2-input" value="30" min="5" max="365">
+      `,
+      focusConfirm: false,
+      confirmButtonText: 'Generar predicción',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      preConfirm: () => {
+        const days = parseInt(document.getElementById('swal-horizonDays').value, 10);
+        if (isNaN(days) || days < 1) {
+          Swal.showValidationMessage('Ingresa un número válido mayor a 0');
+          return null;
+        }
+        return days;
+      }
+    });
+
+    if (!horizonDays) return;
+
+    // Mostrar loading
+    Swal.fire({
+      title: `Predicción para ${producto.nombre}`,
+      html: '<p>Cargando...</p>',
+      allowOutsideClick: false,
+      didOpen: async () => {
+        try {
+          const result = await this.handleProphet(producto, horizonDays, []);
+
+          console.log("=== RESULTADO COMPLETO ===", result);
+
+          if (!result) {
+            Swal.fire('Datos insuficientes', `El producto "${producto.nombre}" necesita al menos 2 registros de ventas en fechas diferentes para generar una predicción. 📊\n\nPor favor, registra más ventas antes de usar la predicción con IA.`, 'warning');
+            return;
+          }
+
+          let forecastData = result.forecast || result;
+          
+          console.log("Forecast data:", forecastData);
+          console.log("Es array?", Array.isArray(forecastData));
+          console.log("Largo:", forecastData?.length);
+
+          if (result.forecast && Array.isArray(result.forecast)) {
+            forecastData = result.forecast;
+          }
+          else if (Array.isArray(result)) {
+            forecastData = result;
+          }
+          
+          if (!forecastData || !Array.isArray(forecastData) || forecastData.length === 0) {
+            console.error("Datos inválidos:", {forecastData, isArray: Array.isArray(forecastData), length: forecastData?.length});
+            Swal.fire('Error', `No hay datos de predicción. Verifica la consola.`, 'error');
+            return;
+          }
+
+          // Crear tabla con validación de valores mínimos no negativos
+          const tableRows = forecastData.map(item => {
+            const yhatLower = Math.max(0, parseFloat(item.yhat_lower)); // Asegurar que no sea negativo
+            return `
+              <tr>
+                <td style="padding: 5px 10px; border-bottom: 1px solid #ddd;">${new Date(item.ds).toLocaleDateString()}</td>
+                <td style="padding: 5px 10px; border-bottom: 1px solid #ddd; text-align: center;">${parseFloat(item.yhat).toFixed(2)}</td>
+                <td style="padding: 5px 10px; border-bottom: 1px solid #ddd; text-align: center; font-size: 0.9em; color: #666;">${yhatLower.toFixed(2)}</td>
+                <td style="padding: 5px 10px; border-bottom: 1px solid #ddd; text-align: center; font-size: 0.9em; color: #666;">${parseFloat(item.yhat_upper).toFixed(2)}</td>
+              </tr>
+            `;
+          }).join('');
+
+          const htmlTable = `
+            <table style="border-collapse: collapse; width: 100%; margin-top: 10px;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th style="padding: 10px; border-bottom: 2px solid #aaa;">Fecha</th>
+                  <th style="padding: 10px; border-bottom: 2px solid #aaa;">Cantidad</th>
+                  <th style="padding: 10px; border-bottom: 2px solid #aaa;">Mín.</th>
+                  <th style="padding: 10px; border-bottom: 2px solid #aaa;">Máx.</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableRows}
+              </tbody>
+            </table>
+          `;
+
+          Swal.fire({
+            title: `Predicción para ${producto.nombre}`,
+            html: htmlTable,
+            width: '700px',
+            confirmButtonText: 'Cerrar'
+          });
+
+        } catch (error) {
+          console.error("Error en handleProphetUI:", error);
+          Swal.fire('Error', 'Ocurrió un error al procesar la predicción', 'error');
+        }
+      }
+    });
+  };
+
+  handleProphet = async (producto, horizonDays = 30, events = []) => {
+    const token = localStorage.getItem("authToken");
+    const empresaID = localStorage.getItem("userId");
+
+    try {
+      const historyResponse = await axios.get(
+        `http://localhost:8080/api/ventas/empresa/${empresaID}/producto/${producto.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const historyData = historyResponse.data;
+
+      if (!historyData || historyData.length === 0) {
+        console.warn("No hay datos históricos para este producto");
+        return null;
+      }
+
+      console.log("Datos históricos recibidos:", historyData);
+      console.log("Cantidad de registros:", historyData.length);
+
+      const groupedHistory = historyData.reduce((acc, h) => {
+        const date = new Date(h.fechaVenta).toISOString().slice(0, 10);
+        acc[date] = (acc[date] || 0) + Number(h.cantidad);
+        return acc;
+      }, {});
+
+      const history = Object.entries(groupedHistory)
+        .map(([ds, y]) => ({ 
+          ds: String(ds), 
+          y: Number(y) 
+        }))
+        .filter(h => !isNaN(h.y));
+
+      console.log("Fechas únicas después de agrupar:", history.length);
+
+      if (history.length < 2) {
+        console.warn(`Datos insuficientes: ${history.length} fecha(s) encontrada(s), se necesitan al menos 2`);
+        return null;
+      }
+
+      console.log("Historial procesado:", history);
+      console.log("Tipo de primer elemento:", typeof history[0], history[0]);
+
+      const payload = {
+        company_id: parseInt(empresaID),
+        product_id: producto.id.toString(),
+        horizon_days: horizonDays,
+        history: history,
+        events: []
+      };
+
+      console.log("Payload enviado:", payload);
+
+      const predictResponse = await axios.post(
+        "http://localhost:8080/predictProduct",
+        payload
+      );
+
+      console.log("=== RESPUESTA COMPLETA DEL BACKEND ===", predictResponse.data);
+      console.log("Status:", predictResponse.status);
+      
+      if (predictResponse.data.error) {
+        console.error("Error del backend:", predictResponse.data.error);
+        
+        if (predictResponse.data.error.includes('less than 2 non-NaN rows')) {
+          Swal.fire('Datos insuficientes', `El producto "${producto.nombre}" necesita al menos 2 registros de ventas en fechas diferentes para generar una predicción. Por favor, registra más ventas.`, 'warning');
+        } else {
+          Swal.fire('Error', `Error en predicción: ${predictResponse.data.error}`, 'error');
+        }
+        return null;
+      }
+      
+      return predictResponse.data;
+
+    } catch (err) {
+      console.error("Error en handleProphet:", err);
+      console.error("Detalles del error:", err.response?.data || err.message);
+      return null;
+    }
+  };
+
+  handleStockRecommendUI = async (producto) => {
+    const { value: formValues } = await MySwal.fire({
+      title: `Recomendación de stock para ${producto.nombre}`,
+      html: `
+        <label for="swal-horizonDays"><strong>Días de horizonte:</strong></label>
+        <input id="swal-horizonDays" type="number" class="swal2-input" value="30" min="1">
+        <br/>
+        <label for="swal-leadTime"><strong>Lead time (días):</strong></label>
+        <input id="swal-leadTime" type="number" class="swal2-input" value="7" min="1">
+      `,
+      focusConfirm: false,
+      confirmButtonText: 'Calcular',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      preConfirm: () => ({
+        horizonDays: parseInt(document.getElementById('swal-horizonDays').value, 10),
+        leadTimeDays: parseInt(document.getElementById('swal-leadTime').value, 10)
+      })
+    });
+
+    if (!formValues) return;
+
+    const token = localStorage.getItem("authToken");
+    const empresaID = localStorage.getItem("userId");
+
+    try {
+      const historyResponse = await axios.get(
+        `http://localhost:8080/api/ventas/empresa/${empresaID}/producto/${producto.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const historyData = historyResponse.data;
+      if (!historyData || historyData.length === 0) {
+        Swal.fire('Sin historial', `El producto "${producto.nombre}" no registra ventas`, 'info');
+        return;
+      }
+
+      // Validar que haya al menos 2 fechas diferentes
+      const groupedHistory = historyData.reduce((acc, h) => {
+        const date = new Date(h.fechaVenta).toISOString().slice(0, 10);
+        acc[date] = (acc[date] || 0) + Number(h.cantidad);
+        return acc;
+      }, {});
+
+      const uniqueDates = Object.keys(groupedHistory);
+      if (uniqueDates.length < 2) {
+        Swal.fire('Datos insuficientes', `El producto "${producto.nombre}" necesita al menos 2 registros de ventas en fechas diferentes.`, 'warning');
+        return;
+      }
+
+      const history = Object.entries(groupedHistory)
+        .map(([ds, y]) => ({ ds, y }))
+        .filter(h => !isNaN(h.y));
+
+      const payload = [{
+        company_id: parseInt(empresaID),
+        product_id: producto.id.toString(),
+        history: history,
+        horizon_days: formValues.horizonDays,
+        lead_time_days: formValues.leadTimeDays,
+        current_stock: producto.stockActual || 0
+      }];
+
+      console.log("Payload stock recommend:", payload);
+
+      const response = await axios.post(
+        "http://localhost:8080/stockRecommend",
+        payload
+      );
+
+      const rec = response.data.recommendations[0].recommendation;
+
+      Swal.fire({
+        title: `Recomendación para ${producto.nombre}`,
+        html: `
+          <div style="text-align: left; padding: 20px;">
+            <p><strong>Stock actual:</strong> ${rec.current_stock.toFixed(2)}</p>
+            <p><strong>Demanda en lead time (${rec.lead_time_days} días):</strong> ${Math.max(0, rec.lead_time_demand).toFixed(2)}</p>
+            <p><strong>Demanda futura total (${rec.horizon_days} días):</strong> ${Math.max(0, rec.future_demand).toFixed(2)}</p>
+            <hr/>
+            <p style="background-color: #d4edda; padding: 10px; border-radius: 5px; font-size: 1.1em;">
+              <strong>📦 Pedido recomendado: ${Math.max(0, rec.recommended_order).toFixed(2)}</strong>
+            </p>
+          </div>
+        `,
+        confirmButtonText: 'Cerrar'
+      });
+
+    } catch (err) {
+      console.error("Error en handleStockRecommendUI:", err);
+      console.error("Detalles:", err.response?.data || err.message);
+      Swal.fire('Error', 'No se pudo obtener la recomendación de stock ❌', 'error');
+    }
+  };
+
+
   render() {
     const { productos, loading, error } = this.state;
 
@@ -152,6 +432,9 @@ handleModifyItem = async (producto) => {
             <div className="card">
               <div className="card-body">
                 <h4 className="card-title">Lista de productos</h4>
+                                  <button className="btn btn-info" onClick={() => this.handleStockRecommendUI(productos[0])}>
+                    📊 Recomendación de Stock
+                  </button>
                 <div className="table-responsive">
                   <table className="table table-striped">
                     <thead>
@@ -178,7 +461,7 @@ handleModifyItem = async (producto) => {
                             <button className="btn btn-warning" onClick={() => this.handleModifyItem(prod)}>Modificar</button>
                           </td>
                           <td className="py-1">
-                            <button className="btn btn-success">Uso de IA</button>
+                            <button className="btn btn-success" onClick={() => this.handleProphetUI(prod)}>Uso de IA</button>
                           </td>
                         </tr>
                       ))}

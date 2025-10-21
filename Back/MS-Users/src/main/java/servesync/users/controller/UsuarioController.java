@@ -1,7 +1,5 @@
 package servesync.users.controller;
 
-
-import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import servesync.users.dto.*;

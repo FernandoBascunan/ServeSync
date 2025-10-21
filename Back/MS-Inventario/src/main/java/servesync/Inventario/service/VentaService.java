@@ -3,9 +3,7 @@ package servesync.Inventario.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import servesync.Inventario.config.TenantContext;
-import servesync.Inventario.dto.VentaDTO;
-import servesync.Inventario.dto.VentaResponseDTO;
-import servesync.Inventario.dto.detalleVentaDTO;
+import servesync.Inventario.dto.*;
 import servesync.Inventario.entity.DetalleVenta;
 import servesync.Inventario.entity.Producto;
 import servesync.Inventario.entity.Venta;
@@ -59,5 +57,20 @@ public class VentaService {
 
         Venta guardada = ventaRepository.save(venta);
         return ventaMapper.toDTO(guardada);
+    }
+
+
+    public List<VentaCantidadDTO> getVentasByEmpresaAndProducto(Long empresaID, Long productoID) {
+        List<Venta> ventas = ventaRepository.findDistinctByEmpresaIDAndDetalles_Producto_Id(empresaID, productoID);
+
+        // Mapear solo fecha y cantidad vendida del producto filtrado
+        return ventas.stream()
+                .flatMap(v -> v.getDetalles().stream()
+                        .filter(d -> d.getProducto().getId().equals(productoID))
+                        .map(d -> new VentaCantidadDTO(
+                                v.getFechaVenta(),
+                                d.getCantidad()
+                        ))
+                ).collect(Collectors.toList());
     }
 }
