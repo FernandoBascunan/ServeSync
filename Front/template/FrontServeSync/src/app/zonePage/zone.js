@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Zone.scss'; // asegúrate de crear este archivo o importarlo en App.scss
+import './zone.scss'; // asegúrate de tener este archivo o importarlo en App.scss
 
 export class Zone extends Component {
   state = {
@@ -12,6 +12,10 @@ export class Zone extends Component {
     cantidadMesas: 0,
     capacidades: []
   };
+
+  componentDidMount() {
+    this.cargarMesasZona();
+  }
 
   componentDidUpdate(prevProps) {
     const zonaIdActual = this.props.match?.params?.id || localStorage.getItem('zonaSeleccionada');
@@ -138,13 +142,14 @@ export class Zone extends Component {
           </div>
         ) : (
           <div className="mesas-grid">
-            {mesas.map(mesa => (
+            {mesas.map((mesa, index) => (
               <div
                 key={mesa.id}
                 className="mesa-card"
                 onClick={() => this.handleMesaClick(mesa)}
               >
-                <span className="mesa-numero">{mesa.id}°</span>
+                {/* 🔹 Numeración local (1, 2, 3...) en lugar del ID global */}
+                <span className="mesa-numero">{index + 1}°</span>
                 <span className="mesa-ocupacion">
                   {mesa.ocupacion || `${mesa.ocupantes || 0}/${mesa.capacidad}`}
                 </span>
@@ -156,7 +161,7 @@ export class Zone extends Component {
         {mostrarModal && mesaSeleccionada && (
           <div className="modal-overlay">
             <div className="modal-content">
-              <h5>Editar Mesa {mesaSeleccionada.id}</h5>
+              <h5>Editar Mesa</h5>
               <button className="btn-cerrar" onClick={this.handleCerrarModal}>×</button>
 
               <div className="modal-inputs">
