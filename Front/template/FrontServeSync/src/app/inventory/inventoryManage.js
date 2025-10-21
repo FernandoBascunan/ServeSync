@@ -432,9 +432,6 @@ handleModifyItem = async (producto) => {
             <div className="card">
               <div className="card-body">
                 <h4 className="card-title">Lista de productos</h4>
-                                  <button className="btn btn-info" onClick={() => this.handleStockRecommendUI(productos[0])}>
-                    📊 Recomendación de Stock
-                  </button>
                 <div className="table-responsive">
                   <table className="table table-striped">
                     <thead>
@@ -463,6 +460,10 @@ handleModifyItem = async (producto) => {
                           <td className="py-1">
                             <button className="btn btn-success" onClick={() => this.handleProphetUI(prod)}>Uso de IA</button>
                           </td>
+                          <td className="py-1">
+                            <button className="btn btn-info" onClick={() => this.handleStockRecommendUI(prod)}>Recomendación de Stock</button>
+                          </td>
+
                         </tr>
                       ))}
                     </tbody>

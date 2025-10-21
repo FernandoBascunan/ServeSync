@@ -14,10 +14,10 @@ public class Mesa {
     private long id;
 
     private int capacidad;
-    private Boolean status = true;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "zona_id")
-    @JsonBackReference   // 👈 Agrega esta línea
+    @JsonBackReference
     private Zona zona;
 }
