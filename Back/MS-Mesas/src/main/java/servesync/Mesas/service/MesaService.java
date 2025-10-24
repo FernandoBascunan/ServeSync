@@ -20,4 +20,14 @@ public class MesaService {
     public void eliminarMesa(int id) {
         mesaRepository.deleteById(id);
     }
+    public Mesa actualizarMesa(Long id, Mesa mesaActualizada) {
+        Mesa mesaExistente = mesaRepository.findById(id.intValue())
+                .orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
+
+        // Actualizamos solo lo necesario
+        mesaExistente.setStatus(mesaActualizada.getStatus());
+
+        return mesaRepository.save(mesaExistente);
+    }
+
 }

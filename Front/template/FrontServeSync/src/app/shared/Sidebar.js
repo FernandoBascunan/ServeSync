@@ -26,10 +26,9 @@ class Sidebar extends Component {
     };
   }
 
-  handleZonaSeleccionada = (idZona) => {
-    localStorage.setItem('zonaSeleccionada', idZona);
-    console.log("ID SELECCIONADO", idZona)
-  };
+handleZonaSeleccionada = (idZona, nombreZona) => {
+  localStorage.setItem('zonaSeleccionada', idZona);
+};
 
   componentDidMount() {
     this.onRouteChanged();
@@ -38,8 +37,6 @@ class Sidebar extends Component {
     const idGuardado = localStorage.getItem('zonaSeleccionada');
     if (idGuardado) {
       console.log('Última zona seleccionada:', idGuardado);
-      // 👉 Si quieres redirigir automáticamente a esa zona:
-      // this.props.history.push(`/zonePage/zone/${idGuardado}`);
     }
     const body = document.querySelector('body');
     document.querySelectorAll('.sidebar .nav-item').forEach(el => {

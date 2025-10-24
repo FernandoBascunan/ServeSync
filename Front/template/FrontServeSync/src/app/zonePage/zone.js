@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './zone.scss'; // asegúrate de tener este archivo o importarlo en App.scss
+import './zone.scss';
 
 export class Zone extends Component {
   state = {
     mesas: [],
     mesaSeleccionada: null,
     mostrarModal: false,
-    ocupantesTemp: 0,
-    capacidadTemp: 0,
     cantidadMesas: 0,
     capacidades: []
   };
@@ -45,11 +43,10 @@ export class Zone extends Component {
   };
 
   handleMesaClick = (mesa) => {
+    localStorage.setItem("mesaId", mesa.id)
     this.setState({
       mesaSeleccionada: mesa,
-      mostrarModal: true,
-      ocupantesTemp: mesa.ocupantes || 0,
-      capacidadTemp: mesa.capacidad
+      mostrarModal: true
     });
   };
 
@@ -57,21 +54,23 @@ export class Zone extends Component {
     this.setState({ mostrarModal: false, mesaSeleccionada: null });
   };
 
-  handleGuardarCambios = () => {
-    const { mesaSeleccionada, ocupantesTemp, capacidadTemp } = this.state;
+  handleGuardarCambios = async () => {
+    const { mesaSeleccionada } = this.state;
 
-    if (ocupantesTemp > capacidadTemp) {
-      alert("Ocupantes no pueden ser mayores que la capacidad");
-      return;
+    try {
+      await axios.put(`http://localhost:8080/api/mesas/${mesaSeleccionada.id}`, mesaSeleccionada);
+
+      this.setState(prev => ({
+        mesas: prev.mesas.map(m => m.id === mesaSeleccionada.id ? mesaSeleccionada : m),
+        mostrarModal: false,
+        mesaSeleccionada: null
+      }));
+
+      alert("Estado actualizado correctamente ✅");
+    } catch (error) {
+      console.error("Error al actualizar mesa:", error);
+      alert("Hubo un error al actualizar el estado de la mesa");
     }
-
-    const mesasActualizadas = this.state.mesas.map(mesa =>
-      mesa.id === mesaSeleccionada.id
-        ? { ...mesa, ocupantes: ocupantesTemp, capacidad: capacidadTemp, ocupacion: `${ocupantesTemp}/${capacidadTemp}` }
-        : mesa
-    );
-
-    this.setState({ mesas: mesasActualizadas, mostrarModal: false, mesaSeleccionada: null });
   };
 
   handleCrearMesas = async () => {
@@ -85,8 +84,8 @@ export class Zone extends Component {
       for (let i = 0; i < cantidadMesas; i++) {
         const nuevaMesa = {
           capacidad: capacidades[i] || 4,
-          zona: { id: parseInt(zonaId) },
-          status: true
+          status: "Libre",
+          zona: { id: parseInt(zonaId) }
         };
         await axios.post("http://localhost:8080/api/mesas", nuevaMesa);
       }
@@ -99,11 +98,37 @@ export class Zone extends Component {
     }
   };
 
+    handleEliminarMesa = async () => {
+      const mesaId = localStorage.getItem("mesaId")
+      try {
+        await axios.delete(`http://localhost:8080/api/mesas/${mesaId}`);
+        this.setState(prev => ({
+          mesas: prev.mesas.filter(m => m.id !== parseInt(mesaId)),
+          mostrarModal: false,        // cerramos el modal
+          mesaSeleccionada: null      // reseteamos la mesa seleccionada
+        }));
+        alert("Mesa eliminada ✅");
+      } catch (error) {
+        console.error("Error al eliminar mesa:", error);
+        alert("Hubo un error al eliminar la mesa");
+      }
+    };
+
   render() {
-    const { mesas, mostrarModal, mesaSeleccionada, cantidadMesas, capacidades, ocupantesTemp, capacidadTemp } = this.state;
+    const { mesas, mostrarModal, mesaSeleccionada, cantidadMesas, capacidades} = this.state;
 
     return (
-      <div className="zone-container">
+
+      <div>
+        <div className="page-header">
+          <h3 className="page-title">Zonas</h3>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item"><a href="!#" onClick={e => e.preventDefault()}>Zonas de mesas</a></li>
+              <li className="breadcrumb-item active" aria-current="page">Nombre de la zona</li>
+            </ol>
+          </nav>
+        </div>
         {mesas.length === 0 ? (
           <div className="crear-mesas">
             <p>Esta zona no tiene mesas. Configure cuántas desea crear:</p>
@@ -145,14 +170,11 @@ export class Zone extends Component {
             {mesas.map((mesa, index) => (
               <div
                 key={mesa.id}
-                className="mesa-card"
+                className={`mesa-card status-${mesa.status?.toLowerCase() || 'libre'}`}
                 onClick={() => this.handleMesaClick(mesa)}
               >
-                {/* 🔹 Numeración local (1, 2, 3...) en lugar del ID global */}
                 <span className="mesa-numero">{index + 1}°</span>
-                <span className="mesa-ocupacion">
-                  {mesa.ocupacion || `${mesa.ocupantes || 0}/${mesa.capacidad}`}
-                </span>
+                <span className="mesa-status">{mesa.status || "Libre"}</span>
               </div>
             ))}
           </div>
@@ -165,23 +187,22 @@ export class Zone extends Component {
               <button className="btn-cerrar" onClick={this.handleCerrarModal}>×</button>
 
               <div className="modal-inputs">
-                <label>Capacidad:</label>
-                <input
-                  type="number"
-                  value={capacidadTemp}
-                  onChange={e => this.setState({ capacidadTemp: parseInt(e.target.value) || 0 })}
-                  min="1"
-                  max="20"
-                />
-                <label>Ocupantes:</label>
-                <input
-                  type="number"
-                  value={ocupantesTemp}
-                  onChange={e => this.setState({ ocupantesTemp: parseInt(e.target.value) || 0 })}
-                  min="0"
-                  max={capacidadTemp}
-                />
+                <label>Estado de la mesa:</label>
+                <select
+                  value={mesaSeleccionada.status || "Libre"}
+                  onChange={e =>
+                    this.setState({
+                      mesaSeleccionada: { ...mesaSeleccionada, status: e.target.value }
+                    })
+                  }
+                >
+                  <option value="Libre">Libre</option>
+                  <option value="Ocupada">Ocupada</option>
+                  <option value="Reservada">Reservada</option>
+                </select>
               </div>
+
+              <button className="btn-eliminar" onClick={this.handleEliminarMesa}>Eliminar Mesa</button>
               <button className="btn-guardar" onClick={this.handleGuardarCambios}>Guardar</button>
             </div>
           </div>

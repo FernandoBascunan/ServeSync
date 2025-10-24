@@ -24,5 +24,8 @@ public class MesaController {
     public List<Mesa> mesasPorZona(@PathVariable int zonaId) {
          return mesaService.mostrarMesas(zonaId);
     }
-
+    @PutMapping("/{id}")
+    public Mesa actualizarMesa(@PathVariable Long id, @RequestBody Mesa mesaActualizada) {
+        return mesaService.actualizarMesa(id, mesaActualizada);
+    }
 }
