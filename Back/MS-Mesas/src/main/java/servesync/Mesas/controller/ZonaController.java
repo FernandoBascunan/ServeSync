@@ -7,7 +7,6 @@ import servesync.Mesas.entity.Zona;
 import servesync.Mesas.service.ZonaService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/mesas/zonas")
@@ -23,16 +22,9 @@ public class ZonaController {
     public void eliminarZona(@PathVariable int zonaId) {
         zonaService.eliminarZona(zonaId);
     }
-
-    @PostMapping("/empresa")
-    public List<Zona> getAllZonesByEmpresa(@RequestBody Map<String, Long> body) {
-        Long empresaId = body.get("empresaId");
-        return zonaService.getZonaByEmpresa(empresaId);
-    }
-
     // 🔹 Obtener zonas por empresa (GET)
-    @GetMapping("/empresa")
-    public List<Zona> getZonasByEmpresa(@RequestParam Long empresaId) {
+    @GetMapping("/{empresaId}")
+    public List<Zona> getZonasByEmpresa(@PathVariable Long empresaId) {
         return zonaService.getZonaByEmpresa(empresaId);
     }
 }
