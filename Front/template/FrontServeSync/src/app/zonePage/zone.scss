@@ -160,3 +160,18 @@
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+.btn-deleteZone{
+  background: red;
+  color: white  ;
+  width: 70%;
+  border: none;
+  border-radius: 10px;
+  height: 30px;
+}
+
+.center{
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}

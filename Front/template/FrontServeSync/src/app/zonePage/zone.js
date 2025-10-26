@@ -114,6 +114,10 @@ export class Zone extends Component {
       }
     };
 
+  handleDeleteZone = async ()=>{
+
+  }
+
   render() {
     const { mesas, mostrarModal, mesaSeleccionada, cantidadMesas, capacidades} = this.state;
 
@@ -181,6 +185,9 @@ export class Zone extends Component {
             ))}
           </div>
         )}
+        <div className='center'>
+          <button className='btn-deleteZone' onClick={this.handleDeleteZone}> Eliminar zona</button>
+        </div>
 
         {mostrarModal && mesaSeleccionada && (
           <div className="modal-overlay">
