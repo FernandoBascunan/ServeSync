@@ -25,7 +25,7 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // 🔑 Generar Token
+    // Generar Token
     public String generateToken(String username, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
@@ -38,13 +38,13 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 🔑 Validar Token
+    // Validar Token
     public boolean validateToken(String token, String username) {
         String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username));
     }
 
-    // Extraer username (subject)
+    // Extraer username
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -57,7 +57,6 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    // Legacy API version for older JJWT versions
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) secretKey)

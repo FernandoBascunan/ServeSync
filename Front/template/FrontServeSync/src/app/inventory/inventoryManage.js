@@ -20,7 +20,7 @@ export class InventoryManage extends Component {
   }
 
   cargarProductos = async () => {
-    const empresaID = localStorage.getItem('userId'); // id de la empresa logueada
+    const empresaID = localStorage.getItem('userId'); 
     const token = localStorage.getItem('authToken')
 
     if (!empresaID) {
@@ -31,7 +31,7 @@ export class InventoryManage extends Component {
     try {
       const response = await axios.get(`http://localhost:8080/api/inventario/${empresaID}`, {
         headers:{
-          Authorization: `Bearer ${token}` // usando template literal correcto
+          Authorization: `Bearer ${token}` 
         }
       });
       this.setState({ productos: response.data, loading: false });
@@ -62,10 +62,9 @@ handleDeleteItem = async (id) => {
       }
     });
 
-    // ✅ Éxito
+
     await MySwal.fire('Eliminado', response.data || 'Producto eliminado correctamente ✅', 'success');
 
-    // Actualizar lista
     this.setState((prevState) => ({
       productos: prevState.productos.filter((prod) => prod.id !== id)
     }));
@@ -77,7 +76,6 @@ handleDeleteItem = async (id) => {
       err.message ||
       'Error desconocido al eliminar el producto.';
 
-    // ⚠️ Si el backend devolvió conflicto por estar asociado a una venta (HTTP 409)
     if (err.response?.status === 409) {
       await MySwal.fire(
         'No se puede eliminar ❌',
@@ -129,7 +127,7 @@ handleModifyItem = async (producto) => {
     }
   });
 
-  if (!formValues) return; // Si cancelaron el popup
+  if (!formValues) return; 
 
   try {
     const response = await axios.put(
@@ -146,7 +144,7 @@ handleModifyItem = async (producto) => {
       }
     );
 
-    // Actualizamos estado
+
     this.setState((prev) => ({
       productos: prev.productos.map((p) =>
         p.id === producto.id ? response.data : p
@@ -160,7 +158,6 @@ handleModifyItem = async (producto) => {
   }
 };
   handleProphetUI = async (producto) => {
-    // Pedir días de predicción al usuario
     const { value: horizonDays } = await MySwal.fire({
       title: `Predicción para ${producto.nombre}`,
       html: `
@@ -183,7 +180,6 @@ handleModifyItem = async (producto) => {
 
     if (!horizonDays) return;
 
-    // Mostrar loading
     Swal.fire({
       title: `Predicción para ${producto.nombre}`,
       html: '<p>Cargando...</p>',
@@ -218,9 +214,9 @@ handleModifyItem = async (producto) => {
             return;
           }
 
-          // Crear tabla con validación de valores mínimos no negativos
+
           const tableRows = forecastData.map(item => {
-            const yhatLower = Math.max(0, parseFloat(item.yhat_lower)); // Asegurar que no sea negativo
+            const yhatLower = Math.max(0, parseFloat(item.yhat_lower));
             return `
               <tr>
                 <td style="padding: 5px 10px; border-bottom: 1px solid #ddd;">${new Date(item.ds).toLocaleDateString()}</td>
@@ -380,7 +376,6 @@ handleModifyItem = async (producto) => {
         return;
       }
 
-      // Validar que haya al menos 2 fechas diferentes
       const groupedHistory = historyData.reduce((acc, h) => {
         const date = new Date(h.fechaVenta).toISOString().slice(0, 10);
         acc[date] = (acc[date] || 0) + Number(h.cantidad);

@@ -1,6 +1,5 @@
 package servesync.users.dto;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Data
 @Builder

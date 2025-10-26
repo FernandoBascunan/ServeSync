@@ -63,7 +63,6 @@ public class VentaService {
     public List<VentaCantidadDTO> getVentasByEmpresaAndProducto(Long empresaID, Long productoID) {
         List<Venta> ventas = ventaRepository.findDistinctByEmpresaIDAndDetalles_Producto_Id(empresaID, productoID);
 
-        // Mapear solo fecha y cantidad vendida del producto filtrado
         return ventas.stream()
                 .flatMap(v -> v.getDetalles().stream()
                         .filter(d -> d.getProducto().getId().equals(productoID))

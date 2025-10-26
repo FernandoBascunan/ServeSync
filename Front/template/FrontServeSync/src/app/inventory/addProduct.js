@@ -33,7 +33,6 @@ export class AddProduct extends Component {
     this.setState({ loading: true, error: '', success: '' });
 
     try {
-      // Tomamos el token y el userId del localStorage
       const token = localStorage.getItem('authToken');
       const empresaID = parseInt(localStorage.getItem('userId'));
 

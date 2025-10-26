@@ -104,8 +104,8 @@ export class Zone extends Component {
         await axios.delete(`http://localhost:8080/api/mesas/${mesaId}`);
         this.setState(prev => ({
           mesas: prev.mesas.filter(m => m.id !== parseInt(mesaId)),
-          mostrarModal: false,        // cerramos el modal
-          mesaSeleccionada: null      // reseteamos la mesa seleccionada
+          mostrarModal: false,       
+          mesaSeleccionada: null      
         }));
         alert("Mesa eliminada ✅");
       } catch (error) {

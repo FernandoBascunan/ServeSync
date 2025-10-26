@@ -10,13 +10,12 @@ generarReporteStock = async () => {
 
     const productos = response.data;
 
-    // Verificar si productos existe y tiene elementos
     if (!productos || !Array.isArray(productos) || productos.length === 0) {
       alert('No hay productos en el inventario');
       return;
     }
 
-    // Limpiar las referencias circulares para evitar problemas
+  
     const productosLimpios = productos.map(p => ({
       id: p.id,
       nombre: p.nombre,
@@ -27,7 +26,7 @@ generarReporteStock = async () => {
 
     console.log('Productos limpios:', productosLimpios);
 
-    // Crear HTML formateado
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -76,7 +75,6 @@ generarReporteStock = async () => {
       </html>
     `;
 
-    // Abrir en nueva ventana
     const nuevaVentana = window.open('', '_blank');
     if (nuevaVentana) {
       nuevaVentana.document.write(htmlContent);
@@ -94,7 +92,6 @@ generarReporteVentas = async () => {
   try {
     const empresaID = localStorage.getItem('userId'); 
     const response = await axios.get(`http://localhost:8080/api/inventario/ventas/${empresaID}`);
-    
     const ventas = response.data;
 
     if (!ventas || !Array.isArray(ventas) || ventas.length === 0) {
@@ -102,20 +99,25 @@ generarReporteVentas = async () => {
       return;
     }
 
-    // Limpieza y cálculo de totales por venta
+
     const ventasLimpias = ventas.map(v => ({
       id: v.id,
       fechaVenta: new Date(v.fechaVenta).toLocaleString('es-CL'),
-      detalles: v.detalles.map(d => ({
-        productoId: d.productoId,
-        productoNombre: d.productoNombre,
-        cantidad: d.cantidad,
-        precioUnitario: d.precioUnitario,
-        subtotal: d.cantidad * d.precioUnitario
-      }))
-    }));
+      nombreCliente: v.nombreCliente || 'Sin nombre',
+      detalles: (v.detalles || []).map(d => {
+        const cantidad = Number(d.cantidad) || 0;
+        const precioUnitario = Number(d.productoPrecio) || 0;
+        const subtotal = cantidad * precioUnitario;
 
-    // Total general
+        return {
+          productoId: d.productoId || 'N/A',
+          productoNombre: d.productoNombre || 'Desconocido',
+          cantidad,
+          precioUnitario,
+          subtotal
+        };
+      })
+    }));
     const totalGeneral = ventasLimpias.reduce((total, v) => 
       total + v.detalles.reduce((sum, d) => sum + d.subtotal, 0), 0
     );
@@ -150,6 +152,7 @@ generarReporteVentas = async () => {
       htmlVentas += `
         <div class="venta-general">
           <strong>Venta ID:</strong> ${v.id} |
+          <strong>Cliente:</strong> ${v.nombreCliente} |
           <strong>Fecha:</strong> ${v.fechaVenta} |
           <strong>Total:</strong> $${totalVenta.toFixed(2)}
         </div>
@@ -199,16 +202,13 @@ generarReporteVentas = async () => {
     alert('Error al generar el reporte: ' + error.message);
   }
 };
-
-
 state = {
-    modalReporte: null, // Contendrá la descripción del reporte activo
+    modalReporte: null, 
 };
 abrirModal = (reporte) => {
     this.setState({ modalReporte: reporte });
   };
 
-  // Función para cerrar modal
   cerrarModal = () => {
     this.setState({ modalReporte: null });
   };

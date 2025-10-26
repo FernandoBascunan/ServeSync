@@ -14,7 +14,6 @@ const AddOrder = ({ onPedidoCreado }) => {
   const [detalle, setDetalle] = useState([]);
   const [total, setTotal] = useState(0);
 
-  // Traer zonas y productos
   useEffect(() => {
     fetch(`http://localhost:8080/api/mesas/zonas/${empresaID}`, {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -31,7 +30,6 @@ const AddOrder = ({ onPedidoCreado }) => {
       .catch(err => console.error('Error al cargar productos:', err));
   }, [empresaID, token]);
 
-  // Actualiza total
   useEffect(() => {
     const sum = detalle.reduce((acc, item) => {
       const prod = productos.find(p => p.id === parseInt(item.productoId));
@@ -71,7 +69,7 @@ const AddOrder = ({ onPedidoCreado }) => {
       tipo: tipo,
       zonaMesaId: tipo === 'servir' ? zonaMesaId : null,
       empresaID: empresaID,
-      fase: tipo === 'llevar' ? 'finalizado' : 'pendiente', // Pedido para llevar queda finalizado
+      fase: tipo === 'llevar' ? 'finalizado' : 'pendiente',
       detalles: detalle.map(d => ({ idProducto: parseInt(d.productoId), cantidad: parseInt(d.cantidad) }))
     };
 

@@ -27,9 +27,9 @@
 }
 
 /* Colores según estado */
-.status-libre { background-color: #4caf50; }      /* Verde */
-.status-ocupada { background-color: #f44336; }    /* Rojo */
-.status-reservada { background-color: #ff9800; }  /* Naranja */
+.status-libre { background-color: #4caf50; }      
+.status-ocupada { background-color: #f44336; }    
+.status-reservada { background-color: #ff9800; }  
 
 .mesa-card:hover {
   filter: brightness(1.1);
