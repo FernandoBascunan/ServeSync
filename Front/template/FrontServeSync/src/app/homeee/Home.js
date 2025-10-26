@@ -94,7 +94,6 @@ generarReporteVentas = async () => {
   try {
     const empresaID = localStorage.getItem('userId'); 
     const response = await axios.get(`http://localhost:8080/api/inventario/ventas/${empresaID}`);
-    
     const ventas = response.data;
 
     if (!ventas || !Array.isArray(ventas) || ventas.length === 0) {
@@ -102,17 +101,24 @@ generarReporteVentas = async () => {
       return;
     }
 
-    // Limpieza y cálculo de totales por venta
+    // Limpieza y validación de datos
     const ventasLimpias = ventas.map(v => ({
       id: v.id,
       fechaVenta: new Date(v.fechaVenta).toLocaleString('es-CL'),
-      detalles: v.detalles.map(d => ({
-        productoId: d.productoId,
-        productoNombre: d.productoNombre,
-        cantidad: d.cantidad,
-        precioUnitario: d.precioUnitario,
-        subtotal: d.cantidad * d.precioUnitario
-      }))
+      nombreCliente: v.nombreCliente || 'Sin nombre',
+      detalles: (v.detalles || []).map(d => {
+        const cantidad = Number(d.cantidad) || 0;
+        const precioUnitario = Number(d.productoPrecio) || 0; // 👈 CAMBIO CLAVE AQUÍ
+        const subtotal = cantidad * precioUnitario;
+
+        return {
+          productoId: d.productoId || 'N/A',
+          productoNombre: d.productoNombre || 'Desconocido',
+          cantidad,
+          precioUnitario,
+          subtotal
+        };
+      })
     }));
 
     // Total general
@@ -120,6 +126,7 @@ generarReporteVentas = async () => {
       total + v.detalles.reduce((sum, d) => sum + d.subtotal, 0), 0
     );
 
+    // Construcción del HTML
     let htmlVentas = `
       <!DOCTYPE html>
       <html>
@@ -150,6 +157,7 @@ generarReporteVentas = async () => {
       htmlVentas += `
         <div class="venta-general">
           <strong>Venta ID:</strong> ${v.id} |
+          <strong>Cliente:</strong> ${v.nombreCliente} |
           <strong>Fecha:</strong> ${v.fechaVenta} |
           <strong>Total:</strong> $${totalVenta.toFixed(2)}
         </div>
@@ -186,6 +194,7 @@ generarReporteVentas = async () => {
       </html>
     `;
 
+    // Mostrar reporte en nueva pestaña
     const nuevaVentana = window.open('', '_blank');
     if (nuevaVentana) {
       nuevaVentana.document.write(htmlVentas);

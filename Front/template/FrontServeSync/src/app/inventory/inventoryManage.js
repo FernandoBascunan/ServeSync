@@ -490,7 +490,7 @@ handleModifyItem = async (producto) => {
                             <button className="btn btn-warning" onClick={() => this.handleModifyItem(prod)}>Modificar</button>
                           </td>
                           <td className="py-1">
-                            <button className="btn btn-success" onClick={() => this.handleProphetUI(prod)}>Uso de IA</button>
+                            <button className="btn btn-success" onClick={() => this.handleProphetUI(prod)}>Predicción de ventas</button>
                           </td>
                           <td className="py-1">
                             <button className="btn btn-info" onClick={() => this.handleStockRecommendUI(prod)}>Recomendación de Stock</button>
