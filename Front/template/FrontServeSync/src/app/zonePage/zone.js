@@ -122,6 +122,7 @@ export class Zone extends Component {
       alert("Zona eliminada ✅");
 
       await this.props.cargarZonas(); // carga inicial de zonas
+      await this.props.history.push("/homeee/home");
     } catch (error) {
       console.error("Error al eliminar la zona. error)")
     }
