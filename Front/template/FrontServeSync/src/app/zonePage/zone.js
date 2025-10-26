@@ -98,23 +98,33 @@ export class Zone extends Component {
     }
   };
 
-    handleEliminarMesa = async () => {
-      const mesaId = localStorage.getItem("mesaId")
-      try {
-        await axios.delete(`http://localhost:8080/api/mesas/${mesaId}`);
-        this.setState(prev => ({
-          mesas: prev.mesas.filter(m => m.id !== parseInt(mesaId)),
-          mostrarModal: false,        // cerramos el modal
-          mesaSeleccionada: null      // reseteamos la mesa seleccionada
-        }));
-        alert("Mesa eliminada ✅");
-      } catch (error) {
-        console.error("Error al eliminar mesa:", error);
-        alert("Hubo un error al eliminar la mesa");
-      }
-    };
+  handleEliminarMesa = async () => {
+    const mesaId = localStorage.getItem("mesaId")
+    try {
+      await axios.delete(`http://localhost:8080/api/mesas/${mesaId}`);
+      this.setState(prev => ({
+        mesas: prev.mesas.filter(m => m.id !== parseInt(mesaId)),
+        mostrarModal: false,        // cerramos el modal
+        mesaSeleccionada: null      // reseteamos la mesa seleccionada
+      }));
+      alert("Mesa eliminada ✅");
+    } catch (error) {
+      console.error("Error al eliminar mesa:", error);
+      alert("Hubo un error al eliminar la mesa");
+    }
+  };
 
   handleDeleteZone = async ()=>{
+    const idGuardado = localStorage.getItem('zonaSeleccionada');
+    try{
+      await axios.delete(`http://localhost:8080/api/mesas/zonas/${idGuardado}`)
+
+      alert("Zona eliminada ✅");
+
+      await this.props.cargarZonas(); // carga inicial de zonas
+    } catch (error) {
+      console.error("Error al eliminar la zona. error)")
+    }
 
   }
 
@@ -149,25 +159,6 @@ export class Zone extends Component {
               max="50"
               className="input-principal"
             />
-
-            {cantidadMesas > 0 && capacidades.map((cap, idx) => (
-              <div key={idx} className="input-grupo">
-                <label>Mesa {idx + 1}</label>
-                <br></br>
-                <label>Capacidad:</label>
-                <input
-                  type="number"
-                  value={cap}
-                  onChange={e => {
-                    const nuevasCap = [...capacidades];
-                    nuevasCap[idx] = parseInt(e.target.value) || 1;
-                    this.setState({ capacidades: nuevasCap });
-                  }}
-                  min="1"
-                  max="20"
-                />
-              </div>
-            ))}
 
             <button className="btn-crear" onClick={this.handleCrearMesas}>Crear Mesas</button>
           </div>
@@ -210,9 +201,8 @@ export class Zone extends Component {
                   <option value="Reservada">Reservada</option>
                 </select>
               </div>
-
-              <button className="btn-eliminar" onClick={this.handleEliminarMesa}>Eliminar Mesa</button>
               <button className="btn-guardar" onClick={this.handleGuardarCambios}>Guardar</button>
+              <button className="btn-eliminar" onClick={this.handleEliminarMesa}>Eliminar Mesa</button>
             </div>
           </div>
         )}

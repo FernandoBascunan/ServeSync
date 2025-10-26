@@ -56,12 +56,18 @@
 			}
 		}
 	}
-	.brand-logo {
-		margin-bottom: 2rem;
-		img {
-			width: 150px;
-		}
-	}
+.brand-logo {
+  width: 100%;   // ocupa todo el ancho del contenedor
+  display: flex;
+  justify-content: center; // centra horizontalmente
+  align-items: center;     // centra verticalmente
+
+  img {
+    width: 100%;   // ocupa todo el ancho disponible
+    object-fit: contain; // mantiene proporción de la imagen
+  }
+}
+
 	form {
 		.form-group {
 			margin-bottom: 1.5rem;

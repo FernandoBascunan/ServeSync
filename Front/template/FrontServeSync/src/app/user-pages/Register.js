@@ -142,7 +142,7 @@ export class Register extends Component {
             <div className="col-lg-4 mx-auto">
               <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                 <div className="brand-logo">
-                  <img src={require("../../assets/images/logo.svg")} alt="logo" />
+                  <img src={require("../../assets/images/logito.png")} alt="logo" />
                 </div>
                 <h4>Eres nuevo aca?</h4>
                 <h6 className="font-weight-light">Registrate de forma sencilla. En simples pasos</h6>

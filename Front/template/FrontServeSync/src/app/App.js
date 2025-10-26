@@ -68,7 +68,7 @@ componentDidMount() {
           { sidebarComponent }
           <div className="main-panel">
             <div className="content-wrapper">
-              <AppRoutes/>
+              <AppRoutes  cargarZonas={this.cargarZonas} />
               { SettingsPanelComponent }
             </div>
             { footerComponent }

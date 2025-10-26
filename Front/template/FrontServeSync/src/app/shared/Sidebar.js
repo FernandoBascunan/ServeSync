@@ -26,7 +26,7 @@ class Sidebar extends Component {
     };
   }
 
-handleZonaSeleccionada = (idZona, nombreZona) => {
+handleZonaSeleccionada = (idZona) => {
   localStorage.setItem('zonaSeleccionada', idZona);
 };
 
@@ -159,7 +159,6 @@ handleZonaSeleccionada = (idZona, nombreZona) => {
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="preview-list navbar-dropdown">
-                  <Dropdown.Item onClick={e => e.preventDefault()}><Trans>Ajuste de la cuenta</Trans></Dropdown.Item>
                   <Dropdown.Item onClick={this.handleLogout}><Trans>Cerrar Sesion</Trans></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

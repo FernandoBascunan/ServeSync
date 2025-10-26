@@ -41,7 +41,15 @@ class AppRoutes extends Component {
           <Route exact path="/inventory/inventoryManage" component={ Inventory } />
           <Route exact path="/inventory/addProduct" component={ addProduct } />
 
-          <Route path="/zonePage/zone/:id" component={ Zone } />
+          <Route 
+            path="/zonePage/zone/:id"
+            render={(props) => (
+              <Zone 
+                {...props} 
+                cargarZonas={this.props.cargarZonas} 
+              />
+            )}
+          />
 
           <Route exact path="/orderPage/order" component={ Orders } />
           <Route exact path="/orderPage/addOrder" component={ AddOrder } />

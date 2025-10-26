@@ -113,7 +113,7 @@ handleInputChange = (e) => {
             <div className="col-lg-4 mx-auto">
               <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                 <div className="brand-logo">
-                  <img src={require("../../assets/images/logo.svg")} alt="logo" />
+                  <img src={require("../../assets/images/logito.png")} alt="logo" />
                 </div>
                 <h4>Bienvenido a ServeSync</h4>
                 <h6 className="font-weight-light">Inicia sesion para continuar</h6>
@@ -152,24 +152,6 @@ handleInputChange = (e) => {
                       {loading ? 'INICIANDO SESIÓN...' : 'INICIAR SESION'}
                     </button>
                   </div>
-
-                  <div className="my-2 d-flex justify-content-between align-items-center">
-                    <div className="form-check">
-                      <label className="form-check-label text-muted">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          checked={rememberMe}
-                          onChange={this.handleRememberMeChange}
-                          disabled={loading}
-                        />
-                        <i className="input-helper"></i>
-                        Mantener mi cuenta iniciada
-                      </label>
-                    </div>
-                    <a href="!#" onClick={e => e.preventDefault()} className="auth-link text-black">Olvidaste tu contraseña? Contactanos</a>
-                  </div>
-
                   <div className="text-center mt-4 font-weight-light">
                     No tienes una cuenta? <Link to="/user-pages/register-1" className="text-primary">Crear una cuenta</Link>
                   </div>
