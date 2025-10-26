@@ -24,7 +24,6 @@ public class MesaService {
         Mesa mesaExistente = mesaRepository.findById(id.intValue())
                 .orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
 
-        // Actualizamos solo lo necesario
         mesaExistente.setStatus(mesaActualizada.getStatus());
 
         return mesaRepository.save(mesaExistente);

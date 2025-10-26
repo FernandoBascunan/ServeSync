@@ -41,24 +41,56 @@ export class InventoryManage extends Component {
     }
   }
 
-  handleDeleteItem = async (id) => {
-    const token = localStorage.getItem('authToken');
-    try {
-      await axios.delete(`http://localhost:8080/api/inventario/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+handleDeleteItem = async (id) => {
+  const token = localStorage.getItem('authToken');
 
-      // Actualiza la lista quitando el producto eliminado
-      this.setState((prevState) => ({
-        productos: prevState.productos.filter((prod) => prod.id !== id)
-      }));
-    } catch (err) {
-      console.error(err);
-      this.setState({ error: 'Error al eliminar producto' });
+  const confirm = await MySwal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el producto del inventario.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  try {
+    const response = await axios.delete(`http://localhost:8080/api/inventario/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    // ✅ Éxito
+    await MySwal.fire('Eliminado', response.data || 'Producto eliminado correctamente ✅', 'success');
+
+    // Actualizar lista
+    this.setState((prevState) => ({
+      productos: prevState.productos.filter((prod) => prod.id !== id)
+    }));
+  } catch (err) {
+    console.error("Error al eliminar producto:", err);
+
+    const mensajeError =
+      err.response?.data ||
+      err.message ||
+      'Error desconocido al eliminar el producto.';
+
+    // ⚠️ Si el backend devolvió conflicto por estar asociado a una venta (HTTP 409)
+    if (err.response?.status === 409) {
+      await MySwal.fire(
+        'No se puede eliminar ❌',
+        'El producto está asociado a una o más ventas y no puede ser eliminado.',
+        'error'
+      );
+    } else if (err.response?.status === 404) {
+      await MySwal.fire('No encontrado', 'El producto no existe en la base de datos.', 'warning');
+    } else {
+      await MySwal.fire('Error', mensajeError, 'error');
     }
-  };
+  }
+};
 
 
 
@@ -236,7 +268,7 @@ handleModifyItem = async (producto) => {
 
     try {
       const historyResponse = await axios.get(
-        `http://localhost:8080/api/ventas/empresa/${empresaID}/producto/${producto.id}`,
+        `http://localhost:8080/api/inventario/ventas/empresa/${empresaID}/producto/${producto.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -284,7 +316,7 @@ handleModifyItem = async (producto) => {
       console.log("Payload enviado:", payload);
 
       const predictResponse = await axios.post(
-        "http://localhost:8080/predictProduct",
+        "http://localhost:8080/prophet/predictProduct",
         payload
       );
 
@@ -338,7 +370,7 @@ handleModifyItem = async (producto) => {
 
     try {
       const historyResponse = await axios.get(
-        `http://localhost:8080/api/ventas/empresa/${empresaID}/producto/${producto.id}`,
+        `http://localhost:8080/api/inventario/ventas/empresa/${empresaID}/producto/${producto.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -377,7 +409,7 @@ handleModifyItem = async (producto) => {
       console.log("Payload stock recommend:", payload);
 
       const response = await axios.post(
-        "http://localhost:8080/stockRecommend",
+        "http://localhost:8080/prophet/stockRecommend",
         payload
       );
 

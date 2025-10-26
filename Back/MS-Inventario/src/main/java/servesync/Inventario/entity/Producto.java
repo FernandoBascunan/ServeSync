@@ -29,12 +29,11 @@ public class Producto {
     @Column(nullable = false,name = "empresaID")
     private Long empresaID;
 
-    @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL)
 
     private List<DetalleVenta> ventas=new ArrayList<>();
 
-    @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleOrden> detallesOrden = new ArrayList<>();
+
 
 
 

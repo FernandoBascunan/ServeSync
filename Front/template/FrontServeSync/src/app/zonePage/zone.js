@@ -149,6 +149,8 @@ export class Zone extends Component {
             {cantidadMesas > 0 && capacidades.map((cap, idx) => (
               <div key={idx} className="input-grupo">
                 <label>Mesa {idx + 1}</label>
+                <br></br>
+                <label>Capacidad:</label>
                 <input
                   type="number"
                   value={cap}

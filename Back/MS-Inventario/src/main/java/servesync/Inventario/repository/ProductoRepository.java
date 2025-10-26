@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import servesync.Inventario.entity.Producto;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
-    List<Producto> findAllByEmpresaID(Long empresaID);
     List<Producto> findByEmpresaID(Long empresaID);
-
 }

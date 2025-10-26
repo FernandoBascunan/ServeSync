@@ -22,9 +22,13 @@ public class Venta {
     private Long id;
 
     private LocalDateTime fechaVenta;
+    private String nombreCliente;
 
     @Column(name="empresaID",nullable = false)
     private Long empresaID;
+
+    @Column(nullable = false)
+    private Boolean activa = true;
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

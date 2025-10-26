@@ -7,7 +7,6 @@ import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
 import axios from 'axios';
-import Zone from './zonePage/zone';
 
 class App extends Component {
 state = {

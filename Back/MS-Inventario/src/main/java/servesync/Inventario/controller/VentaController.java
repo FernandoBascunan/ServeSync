@@ -6,15 +6,19 @@ import org.springframework.web.bind.annotation.*;
 import servesync.Inventario.dto.VentaCantidadDTO;
 import servesync.Inventario.dto.VentaDTO;
 import servesync.Inventario.dto.VentaResponseDTO;
+import servesync.Inventario.entity.Venta;
+import servesync.Inventario.repository.VentaRepository;
 import servesync.Inventario.service.VentaService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/ventas")
+@RequestMapping("api/inventario/ventas")
 public class VentaController {
     @Autowired
     private VentaService ventaService;
+    @Autowired
+    private VentaRepository ventaRepository;
     @GetMapping("/{empresaId}")
     public ResponseEntity<List<VentaResponseDTO>> listarVentas(@PathVariable Long empresaId) {
         List<VentaResponseDTO> ventas = ventaService.listar(empresaId);
@@ -26,11 +30,18 @@ public class VentaController {
             @PathVariable Long productoID) {
         return ventaService.getVentasByEmpresaAndProducto(empresaID, productoID);
     }
-    @PostMapping
+    @PutMapping
     public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody  VentaDTO ventaDTO) {
         VentaResponseDTO nuevaVenta = ventaService.registrarVenta(ventaDTO);
         return ResponseEntity.ok(nuevaVenta);
     }
+    @PatchMapping("/{ventaId}/terminar")
+    public Venta terminarPedido(@PathVariable Long ventaId) {
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + ventaId));
 
+        venta.setActiva(false);
+        return ventaRepository.save(venta);
+    }
 
 }

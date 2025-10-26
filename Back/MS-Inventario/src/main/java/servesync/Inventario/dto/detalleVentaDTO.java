@@ -2,7 +2,7 @@ package servesync.Inventario.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import servesync.Inventario.entity.Producto;
+
 
 @Getter
 @Setter

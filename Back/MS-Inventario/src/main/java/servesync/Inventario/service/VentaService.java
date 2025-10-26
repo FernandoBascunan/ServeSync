@@ -2,7 +2,6 @@ package servesync.Inventario.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import servesync.Inventario.config.TenantContext;
 import servesync.Inventario.dto.*;
 import servesync.Inventario.entity.DetalleVenta;
 import servesync.Inventario.entity.Producto;
@@ -32,7 +31,8 @@ public class VentaService {
     public VentaResponseDTO registrarVenta(VentaDTO ventaDTO) {
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDateTime.now());
-        venta.setEmpresaID(ventaDTO.getEmpresaID()); // ✅ tomar empresaID desde el body
+        venta.setEmpresaID(ventaDTO.getEmpresaID());
+        venta.setNombreCliente(ventaDTO.getNombreCliente());
 
         for(detalleVentaDTO detalleDTO : ventaDTO.getDetalles()) {
             Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
@@ -47,7 +47,7 @@ public class VentaService {
             DetalleVenta detalle = new DetalleVenta();
             detalle.setProducto(producto);
             detalle.setCantidad(detalleDTO.getCantidad());
-            detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
+            detalle.setPrecioUnitario(producto.getPrecio());
             detalle.setVenta(venta);
             venta.getDetalles().add(detalle);
 

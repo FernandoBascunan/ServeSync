@@ -8,5 +8,6 @@ import java.util.List;
 @Setter
 public class VentaDTO {
     private Long empresaID;
+    private String nombreCliente;
     private List<detalleVentaDTO> detalles;
 }

@@ -14,5 +14,7 @@ public class VentaResponseDTO {
     private Long id;
     private LocalDateTime fechaVenta;
     private Long empresaID;
+    private String nombreCliente;
+    private Boolean activo;
     private List<DetalleVentaResponseDTO> detalles;
 }

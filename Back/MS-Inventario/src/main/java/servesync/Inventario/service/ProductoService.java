@@ -3,21 +3,17 @@ package servesync.Inventario.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import servesync.Inventario.config.TenantContext;
 import servesync.Inventario.entity.Producto;
 import servesync.Inventario.repository.ProductoRepository;
 
 import java.util.List;
+
 
 @Service
 public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Producto> listarProductos() {
-        Long empresaId = TenantContext.getCurrentTenant();
-        return productoRepository.findAllByEmpresaID(empresaId);
-    }
     public Producto crearProducto(Producto producto) {
         System.out.println(producto.getStockActual());
         return productoRepository.save(producto);

@@ -37,6 +37,6 @@ spring:
             - id: prophet-service
               uri: http://localhost:8000
               predicates:
-                - Path=/prophet
+                - Path=/prophet/**
               filters:
                 - StripPrefix=1

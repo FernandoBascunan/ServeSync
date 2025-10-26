@@ -14,11 +14,6 @@ import java.util.stream.Collectors;
 public class InventarioController {
     @Autowired
     private ProductoService productoService;
-
-    @GetMapping
-    public List<Producto> mostrarStock() {
-        return productoService.listarProductos();
-    }
     @PostMapping
     public Producto crear(@RequestBody Producto producto) {
         return productoService.crearProducto(producto);

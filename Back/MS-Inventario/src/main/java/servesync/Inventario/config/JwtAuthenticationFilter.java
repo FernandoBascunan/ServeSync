@@ -42,10 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long empresaId = claims.get("empresaId", Long.class);
                 String username = claims.getSubject();
 
-
-                TenantContext.setCurrentTenant(empresaId);
-
-
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(username, null, null);
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -59,8 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } finally {
-
-            TenantContext.clear();
         }
     }
 }
