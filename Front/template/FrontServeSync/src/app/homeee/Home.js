@@ -10,13 +10,12 @@ generarReporteStock = async () => {
 
     const productos = response.data;
 
-    // Verificar si productos existe y tiene elementos
     if (!productos || !Array.isArray(productos) || productos.length === 0) {
       alert('No hay productos en el inventario');
       return;
     }
 
-    // Limpiar las referencias circulares para evitar problemas
+  
     const productosLimpios = productos.map(p => ({
       id: p.id,
       nombre: p.nombre,
@@ -27,7 +26,7 @@ generarReporteStock = async () => {
 
     console.log('Productos limpios:', productosLimpios);
 
-    // Crear HTML formateado
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -76,7 +75,6 @@ generarReporteStock = async () => {
       </html>
     `;
 
-    // Abrir en nueva ventana
     const nuevaVentana = window.open('', '_blank');
     if (nuevaVentana) {
       nuevaVentana.document.write(htmlContent);
@@ -101,14 +99,14 @@ generarReporteVentas = async () => {
       return;
     }
 
-    // Limpieza y validación de datos
+
     const ventasLimpias = ventas.map(v => ({
       id: v.id,
       fechaVenta: new Date(v.fechaVenta).toLocaleString('es-CL'),
       nombreCliente: v.nombreCliente || 'Sin nombre',
       detalles: (v.detalles || []).map(d => {
         const cantidad = Number(d.cantidad) || 0;
-        const precioUnitario = Number(d.productoPrecio) || 0; // 👈 CAMBIO CLAVE AQUÍ
+        const precioUnitario = Number(d.productoPrecio) || 0;
         const subtotal = cantidad * precioUnitario;
 
         return {
@@ -120,13 +118,10 @@ generarReporteVentas = async () => {
         };
       })
     }));
-
-    // Total general
     const totalGeneral = ventasLimpias.reduce((total, v) => 
       total + v.detalles.reduce((sum, d) => sum + d.subtotal, 0), 0
     );
 
-    // Construcción del HTML
     let htmlVentas = `
       <!DOCTYPE html>
       <html>
@@ -194,7 +189,6 @@ generarReporteVentas = async () => {
       </html>
     `;
 
-    // Mostrar reporte en nueva pestaña
     const nuevaVentana = window.open('', '_blank');
     if (nuevaVentana) {
       nuevaVentana.document.write(htmlVentas);
@@ -208,16 +202,13 @@ generarReporteVentas = async () => {
     alert('Error al generar el reporte: ' + error.message);
   }
 };
-
-
 state = {
-    modalReporte: null, // Contendrá la descripción del reporte activo
+    modalReporte: null, 
 };
 abrirModal = (reporte) => {
     this.setState({ modalReporte: reporte });
   };
 
-  // Función para cerrar modal
   cerrarModal = () => {
     this.setState({ modalReporte: null });
   };

@@ -17,20 +17,16 @@ export class Login extends Component {
 formatearRut = (valor) => {
   if (!valor) return "";
 
-  // Elimina todo lo que no sea número o K
   valor = valor.replace(/[^0-9kK]/g, "").toUpperCase();
 
-  // Separa cuerpo y dígito verificador
   let cuerpo = valor.slice(0, -1);
+
   let dv = valor.slice(-1);
 
-  // Limita cuerpo a 8 dígitos
   cuerpo = cuerpo.slice(0, 8);
 
-  // Formatea con puntos de miles
   cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-  // Devuelve con guion si hay dígito verificador
   return dv ? `${cuerpo}-${dv}` : cuerpo;
 };
 

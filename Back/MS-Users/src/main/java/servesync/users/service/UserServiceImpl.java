@@ -51,32 +51,32 @@ public class UserServiceImpl implements UserService {
     public LoginResponse login(LoginRequest request) {
         logger.info("Iniciando solicitud de login...");
         logger.info("Buscando usuario con rutEmpresa: '{}'", request.getRutEmpresa());
-        //  Buscar usuario en la BD
+
         User user = userRepository.findByRutEmpresa(request.getRutEmpresa());
 
         if (user == null) {
             throw new RuntimeException("Usuario no encontrado");
         }
-        //  Validar contraseña
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        //  Generar Token
+
         String token = jwtUtil.generateToken(user.getNombreEmpresa(), user.getId());
         logger.info("Token generado: {}", token);
-        //  Retornar DTO con token
+
         return new LoginResponse(user.getId(), user.getNombreEmpresa(), token,true);
     }
 
     @Override
     public UserResponse register(RegisterRequest request) {
         logger.info("Iniciando solicitud de registro...");
-        // Verificar si existe el usuario
+
         if(userRepository.findByRutEmpresa(request.getRutEmpresa())!=null){
             throw new RuntimeException("Ya existe un usuario con ese rut");
         }
-        // Crear el usuario
+
         User user = new User();
         user.setNombreEmpresa(request.getNombreEmpresa());
         user.setRutEmpresa(request.getRutEmpresa());
@@ -87,7 +87,6 @@ public class UserServiceImpl implements UserService {
         user.setRut(request.getRut());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActivo(true);
-        // Guardar el usuario
         User savedUser = userRepository.save(user);
         LocalDate ahora = LocalDate.now();
         user.setFechaRegistro(ahora);
@@ -137,7 +136,6 @@ public class UserServiceImpl implements UserService {
         LocalDate ahora = LocalDate.now();
         user.setFechaActualizacion(ahora);
 
-        // Guardar el usuario
         User savedUser = userRepository.save(user);
 
         return new UserResponse(

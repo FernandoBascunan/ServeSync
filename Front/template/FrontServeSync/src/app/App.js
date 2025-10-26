@@ -22,7 +22,7 @@ cargarZonas = async () => {
 
   if (!empresaID || !token) {
     console.warn("No hay userId o authToken, no se cargan zonas");
-    this.setState({ loadingZonas: false }); // importante para no quedarse "cargando"
+    this.setState({ loadingZonas: false }); 
     return;
   }
 
@@ -48,7 +48,7 @@ cargarZonas = async () => {
 
 componentDidMount() {
   this.onRouteChanged();
-  this.cargarZonas(); // carga inicial de zonas
+  this.cargarZonas(); 
   };
   
   render () {
