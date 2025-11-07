@@ -122,7 +122,7 @@ export class Register extends Component {
         errorMessage = error.message;
       }
       this.setState({
-        error: errorMessage,
+        error: "Credenciales invalidas o ya existentes",
         loading: false
       });
     }
