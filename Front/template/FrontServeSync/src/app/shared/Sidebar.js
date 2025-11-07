@@ -32,8 +32,6 @@ handleZonaSeleccionada = (idZona) => {
 
   componentDidMount() {
     this.onRouteChanged();
-
-    // hover en sidebar-icon-only
     const idGuardado = localStorage.getItem('zonaSeleccionada');
     if (idGuardado) {
       console.log('Última zona seleccionada:', idGuardado);
@@ -91,7 +89,7 @@ handleZonaSeleccionada = (idZona) => {
         text: `La zona "${formValues.nombreZona}" se agregó correctamente`
       });
 
-      this.props.cargarZonas(); // refresca la lista
+      this.props.cargarZonas();
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'No se pudo agregar la zona', 'error');
@@ -164,7 +162,7 @@ handleZonaSeleccionada = (idZona) => {
             </div>
           </li>
 
-          {/* Inicio */}
+          {/* Home */}
           <li className={ this.isPathActive('/home') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/homeee/home">
               <i className="mdi mdi-home menu-icon"></i>
