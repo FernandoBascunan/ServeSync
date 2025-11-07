@@ -232,67 +232,6 @@ inputChangeHandler(event) {
                 </div>
               </div>
             </Tab>
-            <Tab eventKey="CHATS" title="CHATS">
-              <div>
-                <div className="d-flex align-items-center justify-content-between border-bottom">
-                  <p className="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0"><Trans>FRIENDS</Trans></p>
-                  <small className="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal"><Trans>See All</Trans></small>
-                </div>
-                <ul className="chat-list">
-                  <li className="list active">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face1.jpg")} alt="profile" /><span className="online"></span></div>
-                    <div className="info">
-                      <p><Trans>Thomas Douglas</Trans></p>
-                      <p><Trans>Available</Trans></p>
-                    </div>
-                    <small className="text-muted my-auto">19 <Trans>min</Trans></small>
-                  </li>
-                  <li className="list">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face2.jpg")} alt="profile" /><span className="offline"></span></div>
-                    <div className="info">
-                      <div className="wrapper d-flex">
-                        <p><Trans>Catherine</Trans></p>
-                      </div>
-                      <p><Trans>Away</Trans></p>
-                    </div>
-                    <div className="badge badge-success badge-pill my-auto mx-2">4</div>
-                    <small className="text-muted my-auto">23 <Trans>min</Trans></small>
-                  </li>
-                  <li className="list">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face3.jpg")} alt="profile" /><span className="online"></span></div>
-                    <div className="info">
-                      <p><Trans>Daniel Russell</Trans></p>
-                      <p><Trans>Available</Trans></p>
-                    </div>
-                    <small className="text-muted my-auto">14 min</small>
-                  </li>
-                  <li className="list">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face4.jpg")} alt="profile" /><span className="offline"></span></div>
-                    <div className="info">
-                      <p><Trans>James Richardson</Trans></p>
-                      <p>Away</p>
-                    </div>
-                    <small className="text-muted my-auto">2 <Trans>min</Trans></small>
-                  </li>
-                  <li className="list">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face5.jpg")} alt="profile" /><span className="online"></span></div>
-                    <div className="info">
-                      <p><Trans>Madeline Kennedy</Trans></p>
-                      <p><Trans>Available</Trans></p>
-                    </div>
-                    <small className="text-muted my-auto">5 <Trans>min</Trans></small>
-                  </li>
-                  <li className="list">
-                    <div className="profile"><img src={ require("../../assets/images/faces/face6.jpg")} alt="profile" /><span className="online"></span></div>
-                    <div className="info">
-                      <p><Trans>Sarah Graves</Trans></p>
-                      <p><Trans>Available</Trans></p>
-                    </div>
-                    <small className="text-muted my-auto">47 <Trans>min</Trans></small>
-                  </li>
-                </ul>
-              </div>
-            </Tab>
           </Tabs>
         </div>
       </div>
