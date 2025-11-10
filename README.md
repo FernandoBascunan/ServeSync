@@ -30,10 +30,10 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 ## Instalación
 
 ### 1. Clonar el repositorio
-´´´bash 
+```bash 
     git clone https://github.com/FernandoBascunan/ServeSync.git
     cd ServeSync
-´´´
+```
 ### 2. Configurar la base de datos
 
 1. Inicia XAMPP y habilita MySQL
@@ -44,14 +44,14 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 
 1. Abrir el proyecto 
 2. En el archivo application.properties de cada microservicio, ajusta:
-´´´properties
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/"base de datos de cada microservicio"
 spring.datasource.username=root
 spring.datasource.password=
 jwt.secret=clave_secreta_local
-´´´ 
+```
 3. Abrir una terminal por microservicio 
-´´´bash
+```bash
 # Terminal 1
 cd Gateway
 .\mvnw.cmd spring-boot:run
@@ -71,7 +71,12 @@ cd MS-Mesas
 # Terminal 5
 cd MS-Users
 .\mvnw.cmd spring-boot:run
-
+´´´
+4. Iniciar Frontend
+´´´bash
+cd FrontServeSync
+npm start 
+```
 
 ## Arquitectura del proyecto
 
