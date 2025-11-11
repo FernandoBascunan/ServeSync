@@ -8,6 +8,9 @@ import servesync.Mesas.service.ZonaService;
 
 import java.util.List;
 
+// Maneja las operaciones relacionadas con las zonas del sistema de mesas.
+// Proporciona endpoints REST para crear, eliminar y listar zonas por empresa
+
 @RestController
 @RequestMapping("/api/mesas/zonas")
 public class ZonaController {

@@ -7,6 +7,9 @@ import servesync.Mesas.service.MesaService;
 
 import java.util.List;
 
+// Gestiona todas las operaciones relacionadas con las mesas del sistema.
+// Define endpoints REST para crear, eliminar, actualizar y listar mesas por zona, delegando la lógica de negocio al servicio MesaService
+
 @RestController
 @RequestMapping("/api/mesas")
 public class MesaController {

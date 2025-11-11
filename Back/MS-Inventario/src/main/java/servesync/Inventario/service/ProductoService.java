@@ -8,6 +8,8 @@ import servesync.Inventario.repository.ProductoRepository;
 
 import java.util.List;
 
+// La clase ProductoService implementa la lógica de negocio relacionada con los productos dentro del microservicio de inventario de ServeSync.
+// Permite crear, actualizar, eliminar y listar productos asociados a una empresa, interactuando directamente con el ProductoRepository para acceder a la base de datos.
 
 @Service
 public class ProductoService {

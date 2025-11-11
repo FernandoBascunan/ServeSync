@@ -12,8 +12,14 @@ import servesync.users.repository.UserRepository;
 
 import java.time.LocalDate;
 
+// implementa la lógica de negocio del microservicio de usuarios de ServeSync.
+// Gestiona operaciones clave como registro, login, edición de datos, obtención de usuario
+// Cambio de contraseña, interactuando directamente con el repositorio UserRepository
+// Usando el PasswordEncoder para proteger contraseñas.
+
 @Service
-@Transactional
+@Transactional //La anotación @Transactional asegura que las operaciones sobre la base de datos sean
+              // atómicas y consistentes, evitando inconsistencias ante errores.
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;

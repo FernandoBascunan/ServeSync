@@ -5,6 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import servesync.users.dto.*;
 import servesync.users.service.UserService;
 
+
+// Actúa como el controlador REST del microservicio de usuarios en ServeSync.
+// Define los endpoints principales relacionados con la gestión de usuarios
+// Cada método recibe solicitudes HTTP, delega la lógica al servicio UserService,
+// y devuelve una respuesta estructurada usando ResponseEntity
+
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {

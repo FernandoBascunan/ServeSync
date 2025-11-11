@@ -10,6 +10,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// La clase Venta representa la entidad JPA que modela una venta en el microservicio de inventario de ServeSync.
+// Contiene información clave como la fecha, cliente, empresa asociada y estado (activa o finalizada).
+// Establece una relación uno a muchos con DetalleVenta, permitiendo registrar los productos vendidos en cada transacción.
+// El uso de @JsonManagedReference gestiona la serialización JSON junto a @JsonBackReference en DetalleVenta, evitando bucles infinitos al convertir los datos a JSON.
+
 @Entity
 @Table(name="venta")
 @Getter

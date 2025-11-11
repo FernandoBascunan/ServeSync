@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+
+// Permite generar tokens con información del usuario (nombre y ID),
+// validarlos para comprobar su autenticidad y extraer datos (claims) del token recibido.
+
 @Component
 public class JwtUtil {
 

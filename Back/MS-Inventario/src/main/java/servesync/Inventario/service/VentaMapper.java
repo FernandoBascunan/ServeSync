@@ -7,6 +7,10 @@ import servesync.Inventario.entity.Venta;
 
 import java.util.stream.Collectors;
 
+// La clase VentaMapper actúa como un convertidor de entidades a DTOs dentro del microservicio de inventario de ServeSync.
+// Su método toDTO transforma una entidad Venta en un VentaResponseDTO, incluyendo sus detalles (DetalleVentaResponseDTO)
+// para devolver información estructurada y lista para el frontend.
+
 @Service
 public class VentaMapper {
 
