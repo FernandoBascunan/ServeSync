@@ -1,3 +1,6 @@
+# Define los servicios registrados (usuarios, inventario, mesas y Prophet) con sus respectivas rutas
+# y puertos locales, gestionando el enrutamiento de peticiones desde el frontend hacia los microservicios.
+
 spring:
   application:
     name: api-gateway

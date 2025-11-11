@@ -7,6 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+// Desactiva la protección CSRF (útil en APIs REST), permite el acceso libre a las rutas de
+// registro, login y edición de usuario,y exige autenticación para el resto de las peticiones.
+
 @Configuration
 public class SecurityConfig {
 

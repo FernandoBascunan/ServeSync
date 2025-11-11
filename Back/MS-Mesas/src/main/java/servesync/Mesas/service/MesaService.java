@@ -7,6 +7,8 @@ import servesync.Mesas.repository.MesaRepository;
 
 import java.util.List;
 
+// Se encarga de orquestar las operaciones del repositorio, incluyendo listar mesas por zona, crear nuevas mesas, eliminarlas y actualizar su estado.
+
 @Service
 public class MesaService {
     @Autowired

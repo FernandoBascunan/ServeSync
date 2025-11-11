@@ -5,9 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+// La clase Producto define la entidad JPA que representa un producto dentro del sistema de inventario de ServeSync.
+// Incluye atributos esenciales como nombre, stock, precio, categoría y empresa asociada, con validaciones de obligatoriedad y longitud.
+// Mantiene una relación uno a muchos con DetalleVenta, lo que permite registrar las ventas relacionadas con cada producto.
+// El uso de Lombok simplifica la implementación al generar automáticamente los constructores, getters y setters.
 
 @Entity
 @Table(name="producto")

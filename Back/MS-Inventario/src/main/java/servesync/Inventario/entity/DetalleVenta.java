@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// La clase DetalleVenta representa la entidad JPA que modela el detalle de cada venta en el microservicio de inventario.
+// Establece relaciones muchos a uno con las entidades Venta y Producto, indicando que cada detalle pertenece a una venta y a un producto específicos.
+// Usa @JsonBackReference para evitar recursividad infinita al serializar las relaciones bidireccionales en JSON
+
+
 @Entity
 @Table(name="detalle_venta")
 @Getter

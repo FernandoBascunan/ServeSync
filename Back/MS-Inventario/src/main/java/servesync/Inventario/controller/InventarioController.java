@@ -5,9 +5,14 @@ import org.springframework.web.bind.annotation.*;
 import servesync.Inventario.dto.ProductoDTO;
 import servesync.Inventario.entity.Producto;
 import servesync.Inventario.service.ProductoService;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+// Expone los endpoints REST del microservicio de inventario en ServeSync.
+// Permite realizar operaciones CRUD sobre los productos: crear, actualizar, eliminar y listar por empresa.
+
+// Utiliza el servicio ProductoService para manejar la lógica de negocio y transforma las entidades Producto en DTOs (ProductoDTO)
+// antes de enviarlas como respuesta, asegurando una comunicación más ligera y estructurada con el frontend.
 
 @RestController
 @RequestMapping("api/inventario")

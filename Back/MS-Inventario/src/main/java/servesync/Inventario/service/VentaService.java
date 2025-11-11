@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Gestiona el ciclo completo de las ventas —desde el registro hasta la obtención de datos históricos— asegurando la consistencia del stock y la integridad de los datos.
 
 @Service
 public class VentaService {
@@ -28,6 +29,14 @@ public class VentaService {
                 .map(ventaMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+
+    // registrarVenta:
+    //      Valida la existencia de cada producto y el stock disponible.
+    //      Descuenta automáticamente la cantidad vendida del stock del producto.
+    //      Asocia los DetalleVenta con su Venta principal.
+    //      Retorna un VentaResponseDTO mapeado por VentaMapper
+
     public VentaResponseDTO registrarVenta(VentaDTO ventaDTO) {
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDateTime.now());

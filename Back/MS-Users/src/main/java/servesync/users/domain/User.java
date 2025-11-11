@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDate;
+
+// La clase User representa la entidad JPA del usuario dentro del microservicio de usuarios de ServeSync.
+// Mapea la tabla Usuario en la base de datos e incluye los atributos de la empresa y del usuario,
+// junto con datos de auditoría (fechaRegistro y fechaActualizacion).
 
 @Entity
 @Table(name= "Usuario")

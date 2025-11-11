@@ -9,8 +9,10 @@ import servesync.Inventario.dto.VentaResponseDTO;
 import servesync.Inventario.entity.Venta;
 import servesync.Inventario.repository.VentaRepository;
 import servesync.Inventario.service.VentaService;
-
 import java.util.List;
+
+// Gestiona los endpoints REST relacionados con las ventas dentro del microservicio de inventario en ServeSync.
+// Permite listar ventas por empresa, obtener ventas por producto y empresa, registrar nuevas ventas y marcar una venta como finalizada.
 
 @RestController
 @RequestMapping("api/inventario/ventas")
