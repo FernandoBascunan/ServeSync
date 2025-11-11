@@ -78,7 +78,10 @@ jwt.secret= clave_secreta_local
 ```
 Abrir una terminal por microservicio en el orden que se indica: 
 ```bash
-# Terminal 1 cd Gateway .\mvnw.cmd spring-boot:run
+# Terminal 1
+cd Gateway
+.\mvnw.cmd spring-boot:run
+
 # Terminal 2
 cd MS-Prophet 
 uvicorn main:app --reload
