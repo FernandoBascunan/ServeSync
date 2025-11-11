@@ -45,17 +45,17 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 1. Backend (Spring Boot)
 Cada microservicio Java descarga automáticamente sus dependencias con Maven:
 ```bash
-cd MS-Inventario
+cd Back\MS-Inventario
 .\mvnw.cmd clean install
 ```
-Haz lo mismo para MS-Mesas, MS-Users y Gateway.
+Haz lo mismo para Back\MS-Mesas, Back\MS-Users y Back\Gateway.
 
 2. Microservicio de IA (MS-Prophet – FastAPI)
 Instala las dependencias de Python:
 ```bash
 cd MS-Prophet
 python -m venv .venv
-.\.venv\Scripts\activate
+.\.venv\Scripts\activate (Windows por defecto bloquea la activacion de scripts anonimos, debes permitir la activacion en el PowerShell de windows.)
 pip install -r requirements.txt
 ```
 3. Frontend (React)
@@ -83,7 +83,7 @@ cd Gateway
 .\mvnw.cmd spring-boot:run
 
 # Terminal 2
-cd MS-Prophet 
+cd MS-Prophet(Recuerda tener el script activado para usar uvicorn) 
 uvicorn main:app --reload
 
 # Terminal 3
