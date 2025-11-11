@@ -62,7 +62,7 @@ pip install -r requirements.txt
 Instala las dependencias de Node:
 ```bash
 cd FrontServeSync
-npm install
+npm install --legacy-peer-deps
 ```
 
 ### 4. Configurar el Backend
