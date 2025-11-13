@@ -91,14 +91,6 @@ spring.datasource.username= ####  <--- Nombre de usuario de MySQL
 spring.datasource.password= ####  <--- Contraseña de MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
-
-```bash
-spring.datasource.url=jdbc:mysql://localhost:3306/"base de datos de cada microservicio"
-spring.datasource.username=root
-spring.datasource.password=
-# IMPORTANTE: Usa la MISMA clave en todos los microservicios
-jwt.secret= clave_secreta_local
-```
 3. Abrir una terminal por microservicio en el orden que se indica: 
 ```bash
 # Terminal 1
