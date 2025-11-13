@@ -93,7 +93,7 @@ export class Register extends Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include', // importante para CORS con cookies si usas autenticación basada en sesión
+        credentials: 'include', 
         body: JSON.stringify(this.state.formData)
       });
 
@@ -109,7 +109,6 @@ export class Register extends Component {
         loading: false
       });
 
-      // Redirigir al login después de 2 segundos
       setTimeout(() => {
         this.props.history.push('/user-pages/login-1');
       }, 2000);
@@ -121,7 +120,7 @@ export class Register extends Component {
         errorMessage = error.message;
       }
       this.setState({
-        error: errorMessage,
+        error: "Credenciales invalidas o ya existentes",
         loading: false
       });
     }

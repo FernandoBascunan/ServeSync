@@ -94,7 +94,7 @@ componentDidMount() {
         text: `La zona "${formValues.nombreZona}" se agregó correctamente`
       });
 
-      this.props.cargarZonas(); // refresca la lista
+      this.props.cargarZonas(); 
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'No se pudo agregar la zona', 'error');

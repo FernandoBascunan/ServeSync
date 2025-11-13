@@ -388,7 +388,6 @@ handleModifyItem = async (producto) => {
         current_stock: producto.stockActual || 0
       }];
 
-      console.log("Payload stock recommend:", payload);
 
       const response = await axios.post(
         "http://localhost:8080/prophet/stockRecommend",

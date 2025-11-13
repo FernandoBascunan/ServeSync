@@ -226,7 +226,7 @@ abrirModal = (reporte) => {
         </div>
 
         <div className="row">
-          {/* --- TARJETA DE VENTAS --- */}
+          {/* --- VENTAS --- */}
           <div className="col-md-4 grid-margin stretch-card">
             <div className="card text-center">
               <div className="card-body">
@@ -252,7 +252,7 @@ abrirModal = (reporte) => {
             </div>
           </div>
 
-          {/* --- TARJETA DE STOCK --- */}
+          {/* --- STOCK --- */}
           <div className="col-md-4 grid-margin stretch-card">
             <div className="card text-center">
               <div className="card-body">
@@ -280,7 +280,6 @@ abrirModal = (reporte) => {
 
         </div>
 
-        {/* --- MODAL --- */}
         {this.state.modalReporte && (
           <div
             className="modal show"

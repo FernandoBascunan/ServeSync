@@ -1,7 +1,7 @@
 # PROYECTO DE TÍTULO: SERVESYNC 
-## Integrantes
-### Fernando Bascuñán
-### Felipe Engels
+### Integrantes
+- **Fernando Bascuñán**
+- **Felipe Engels** 
 
 Página web de gestión de inventario, manejo de pedidos y predicción de stock con ayuda de inteligencia artificial
 
@@ -60,7 +60,8 @@ Instala las dependencias de Python:
 ```bash
 cd MS-Prophet
 python -m venv .venv
-.\.venv\Scripts\activate
+.\.venv\Scripts\activate (Windows por defecto bloquea la activacion de scripts anonimos, 
+                             debes permitir la activacion en el PowerShell de windows.)
 pip install -r requirements.txt
 ```
 3. Frontend (React)
@@ -88,7 +89,7 @@ cd Gateway
 .\mvnw.cmd spring-boot:run
 
 # Terminal 2
-cd MS-Prophet 
+cd MS-Prophet  (Recuerda tener el script activado para usar uvicorn) 
 uvicorn main:app --reload
 
 # Terminal 3
@@ -111,9 +112,9 @@ npm start
 ## Problemas comunes
 
 
-**Puerto ocupado**: Cambia el puerto en application.properties con server.port=XXXX
-**Error de conexión a BD**: Verifica que MySQL esté corriendo en XAMPP
-**Error de JWT**: Asegúrate de usar la misma clave en todos los microservicios
+- **Puerto ocupado**: Cambia el puerto en application.properties con server.port=XXXX
+- **Error de conexión a BD**: Verifica que MySQL esté corriendo en XAMPP
+- **Error de JWT**: Asegúrate de usar la misma clave en todos los microservicios
 
 ## Arquitectura del proyecto
 
