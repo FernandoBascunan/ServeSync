@@ -91,6 +91,13 @@ spring.datasource.username= ####  <--- Nombre de usuario de MySQL
 spring.datasource.password= ####  <--- Contraseña de MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
+⚠️ **Importante sobre la seguridad de configuración**
+
+Los archivos `application.properties` **ya están incluidos en el `.gitignore`**, por lo tanto **no se subirán al repositorio**.  
+Esto evita exponer información sensible como contraseñas de base de datos o claves JWT.  
+
+➡️ **No subas manualmente tus `application.properties`**, ya que contienen credenciales y datos privados.
+
 3. Abrir una terminal por microservicio en el orden que se indica: 
 ```bash
 # Terminal 1
