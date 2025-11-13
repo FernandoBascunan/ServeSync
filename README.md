@@ -74,7 +74,24 @@ npm install --legacy-peer-deps
 ### 4. Configurar el Backend
 
 1. Abrir el proyecto:
-2. En el archivo application.properties de cada microservicio, ajusta: 
+2. Una vez dentro del proyecto deberas crear una carpeta llamada "resources" dentro de la carpeta llamada "main". Ahi crearas el archivo application.properties
+para cada uno de los microservicios señalados (Inventario, Usuarios, Mesas).
+El archivo debe contener lo siguiente:
+```
+spring.application.name= ####     <--- Nombre del microservicio
+server.port= ####                 <--- Puerto del microservicio
+jwt.secret= ####                  <--- Clave JWT (Debe ser la misma para todos los microservicios)
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+#Base de datos
+spring.datasource.url=jdbc:mysql://localhost:*Tu Puerto*/*Base de datos del microservicio* 
+spring.datasource.username= ####  <--- Nombre de usuario de MySQL
+spring.datasource.password= ####  <--- Contraseña de MySQL
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
 ```bash
 spring.datasource.url=jdbc:mysql://localhost:3306/"base de datos de cada microservicio"
 spring.datasource.username=root
@@ -82,7 +99,7 @@ spring.datasource.password=
 # IMPORTANTE: Usa la MISMA clave en todos los microservicios
 jwt.secret= clave_secreta_local
 ```
-Abrir una terminal por microservicio en el orden que se indica: 
+3. Abrir una terminal por microservicio en el orden que se indica: 
 ```bash
 # Terminal 1
 cd Gateway
