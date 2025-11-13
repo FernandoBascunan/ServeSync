@@ -1,4 +1,7 @@
 # PROYECTO DE TÍTULO: SERVESYNC 
+## Integrantes
+### Fernando Bascuñán
+### Felipe Engels
 
 Página web de gestión de inventario, manejo de pedidos y predicción de stock con ayuda de inteligencia artificial
 
@@ -35,9 +38,11 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 
 1. Inicia XAMPP y habilita MySQL
 2. Crea 3 bases de datos con los siguientes nombres: 
-        - `servesync_users` → MS-Users
-        - `servesync_storage` → MS-Inventario
-        - `servesync_tables` → MS-Mesas
+```
+       - `servesync_users` → MS-Users
+       - `servesync_storage` → MS-Inventario
+       - `servesync_tables` → MS-Mesas
+```
 3. No es necesario importar ningún script — las tablas se crearán automáticamente cuando el backend se inicie.
 
 ### 3. Instalar dependencias
@@ -197,12 +202,10 @@ Una vez en la página web puedes crear tu usuario desde 0 y acceder a las funcio
 #### 1. Gestión de Inventario
 - Agregar, editar y eliminar productos
 - Control de stock en tiempo real
-- Alertas de stock bajo
 
 #### 2. Gestión de Mesas y Pedidos
 - Visualización del estado de mesas
 - Creación y seguimiento de pedidos
-- Asignación de meseros
 
 #### 3. Predicción de Demanda (IA)
 - Análisis histórico de ventas
@@ -228,7 +231,6 @@ Una vez en la página web puedes crear tu usuario desde 0 y acceder a las funcio
 - **React 18**: Librería de UI
 - **React Router**: Navegación
 - **Axios**: Cliente HTTP
-- **Tailwind CSS / Material-UI**: Estilos (especifica cuál usas)
 
 ### Base de Datos
 - **MySQL 8.0**: Base de datos relacional

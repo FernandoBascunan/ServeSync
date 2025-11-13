@@ -30,25 +30,28 @@ handleZonaSeleccionada = (idZona) => {
   localStorage.setItem('zonaSeleccionada', idZona);
 };
 
-  componentDidMount() {
-    this.onRouteChanged();
+componentDidMount() {
+  this.onRouteChanged();
 
-    // hover en sidebar-icon-only
-    const idGuardado = localStorage.getItem('zonaSeleccionada');
-    if (idGuardado) {
-      console.log('Última zona seleccionada:', idGuardado);
-    }
-    const body = document.querySelector('body');
-    document.querySelectorAll('.sidebar .nav-item').forEach(el => {
-      el.addEventListener('mouseover', () => {
-        if(body.classList.contains('sidebar-icon-only')) el.classList.add('hover-open');
-      });
-      el.addEventListener('mouseout', () => {
-        if(body.classList.contains('sidebar-icon-only')) el.classList.remove('hover-open');
-      });
-    });
+  if (this.props.cargarZonas) {
+    this.props.cargarZonas();
   }
 
+  const idGuardado = localStorage.getItem('zonaSeleccionada');
+  if (idGuardado) {
+    console.log('Última zona seleccionada:', idGuardado);
+  }
+
+  const body = document.querySelector('body');
+  document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+    el.addEventListener('mouseover', () => {
+      if (body.classList.contains('sidebar-icon-only')) el.classList.add('hover-open');
+    });
+    el.addEventListener('mouseout', () => {
+      if (body.classList.contains('sidebar-icon-only')) el.classList.remove('hover-open');
+    });
+  });
+}
   handleAddZone = async () => {
     const token = localStorage.getItem("authToken");
     const empresaID = parseInt(localStorage.getItem("userId"));
@@ -100,8 +103,7 @@ handleZonaSeleccionada = (idZona) => {
 
   handleLogout = () => {
     localStorage.clear();
-    if (this.props.history) this.props.history.push("/login");
-    else window.location.href = "/login";
+    window.location.replace('/login');
   }
 
   toggleMenuState = (menuState) => {

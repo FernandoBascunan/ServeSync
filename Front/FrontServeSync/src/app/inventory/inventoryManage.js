@@ -188,7 +188,6 @@ handleModifyItem = async (producto) => {
         try {
           const result = await this.handleProphet(producto, horizonDays, []);
 
-          console.log("=== RESULTADO COMPLETO ===", result);
 
           if (!result) {
             Swal.fire('Datos insuficientes', `El producto "${producto.nombre}" necesita al menos 2 registros de ventas en fechas diferentes para generar una predicción. 📊\n\nPor favor, registra más ventas antes de usar la predicción con IA.`, 'warning');
@@ -197,9 +196,6 @@ handleModifyItem = async (producto) => {
 
           let forecastData = result.forecast || result;
           
-          console.log("Forecast data:", forecastData);
-          console.log("Es array?", Array.isArray(forecastData));
-          console.log("Largo:", forecastData?.length);
 
           if (result.forecast && Array.isArray(result.forecast)) {
             forecastData = result.forecast;
@@ -275,8 +271,6 @@ handleModifyItem = async (producto) => {
         return null;
       }
 
-      console.log("Datos históricos recibidos:", historyData);
-      console.log("Cantidad de registros:", historyData.length);
 
       const groupedHistory = historyData.reduce((acc, h) => {
         const date = new Date(h.fechaVenta).toISOString().slice(0, 10);
@@ -291,15 +285,12 @@ handleModifyItem = async (producto) => {
         }))
         .filter(h => !isNaN(h.y));
 
-      console.log("Fechas únicas después de agrupar:", history.length);
 
       if (history.length < 2) {
         console.warn(`Datos insuficientes: ${history.length} fecha(s) encontrada(s), se necesitan al menos 2`);
         return null;
       }
 
-      console.log("Historial procesado:", history);
-      console.log("Tipo de primer elemento:", typeof history[0], history[0]);
 
       const payload = {
         company_id: parseInt(empresaID),
@@ -309,16 +300,12 @@ handleModifyItem = async (producto) => {
         events: []
       };
 
-      console.log("Payload enviado:", payload);
 
       const predictResponse = await axios.post(
         "http://localhost:8080/prophet/predictProduct",
         payload
       );
 
-      console.log("=== RESPUESTA COMPLETA DEL BACKEND ===", predictResponse.data);
-      console.log("Status:", predictResponse.status);
-      
       if (predictResponse.data.error) {
         console.error("Error del backend:", predictResponse.data.error);
         

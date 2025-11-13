@@ -71,13 +71,16 @@ handleInputChange = (e) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('Credenciales incorrectas. Verifica tu RUT y contraseña.');
+      } else {
+        throw new Error(`Error del servidor (${response.status}): ${response.statusText}`);
+      }
     }
 
     const result = await response.json();
 
     if (result.success) {
-      console.log("Respuesta del backend:", result);
 
       localStorage.setItem('authToken', result.token);
       localStorage.setItem('userId', result.privateKey);

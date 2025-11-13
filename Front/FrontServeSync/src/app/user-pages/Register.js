@@ -103,7 +103,6 @@ export class Register extends Component {
       }
 
       const result = await response.json();
-      console.log('Usuario registrado exitosamente:', result);
 
       this.setState({
         success: '¡Usuario registrado exitosamente! Redirigiendo al login...',
