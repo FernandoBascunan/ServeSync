@@ -1,4 +1,6 @@
 Back/MS_Prophet/servesync-46af3-firebase-adminsdk-fbsvc-6e7cf6093b.json
-Back\MS-Users\src\main\resources\application.properties
 Back\MS-Mesas\src\main\resources\application.properties
-Back\MS-Inventario\src\main\resources\application.properties
+Back/MS-Mesas/src/main/resources/application.properties
+Back/MS-Inventario/src/main/resources/application.properties
+
+*.properties
