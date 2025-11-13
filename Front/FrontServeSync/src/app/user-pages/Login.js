@@ -98,7 +98,7 @@ handleInputChange = (e) => {
       throw new Error('Credenciales inválidas');
     }
   } catch (error) {
-    this.setState({ error: 'Credenciales inválidas', loading: false });
+    this.setState({ error: error.message || 'Error al iniciar sesión', loading: false });
   }
 };
 

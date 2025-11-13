@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import './App.scss';
 import AppRoutes from './AppRoutes';
 import Sidebar from './shared/Sidebar';
+import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
 import axios from 'axios';
@@ -59,6 +60,7 @@ componentDidMount() {
         cargarZonas={this.cargarZonas}
       />
     ) : '';
+    let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel/> : '';
     let footerComponent = !this.state.isFullPageLayout ? <Footer/> : '';
     return (
       <div className="container-scroller">
@@ -67,6 +69,7 @@ componentDidMount() {
           <div className="main-panel">
             <div className="content-wrapper">
               <AppRoutes  cargarZonas={this.cargarZonas} />
+              { SettingsPanelComponent }
             </div>
             { footerComponent }
           </div>

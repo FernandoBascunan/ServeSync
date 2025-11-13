@@ -122,7 +122,7 @@ export class AddProduct extends Component {
                 </Form.Group>
 
                 <Form.Group>
-                  <label>Precio unitario</label>
+                  <label>Precio</label>
                   <div className="input-group">
                     <div className="input-group-prepend">
                       <span className="input-group-text bg-primary text-white">$</span>
@@ -144,13 +144,17 @@ export class AddProduct extends Component {
                 <Form.Group>
                   <label>Categoria</label>
                   <Form.Control
-                    type="text"
+                    as="select"
                     name="categoria"
-                    placeholder="Categoria del producto"
                     value={categoria}
                     onChange={this.handleInputChange}
                     disabled={loading}
-                  />
+                  >
+                    <option value="">Selecciona una categoría</option>
+                    <option value="Bebida">Bebida</option>
+                    <option value="Cerveza">Cerveza</option>
+                    <option value="Jugo">Jugo</option>
+                  </Form.Control>
                 </Form.Group>
 
                 <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
