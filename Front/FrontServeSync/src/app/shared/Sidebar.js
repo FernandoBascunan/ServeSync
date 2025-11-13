@@ -30,11 +30,29 @@ handleZonaSeleccionada = (idZona) => {
   localStorage.setItem('zonaSeleccionada', idZona);
 };
 
+<<<<<<< HEAD
 componentDidMount() {
   this.onRouteChanged();
 
   if (this.props.cargarZonas) {
     this.props.cargarZonas();
+=======
+  componentDidMount() {
+    this.onRouteChanged();
+    const idGuardado = localStorage.getItem('zonaSeleccionada');
+    if (idGuardado) {
+      console.log('Última zona seleccionada:', idGuardado);
+    }
+    const body = document.querySelector('body');
+    document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+      el.addEventListener('mouseover', () => {
+        if(body.classList.contains('sidebar-icon-only')) el.classList.add('hover-open');
+      });
+      el.addEventListener('mouseout', () => {
+        if(body.classList.contains('sidebar-icon-only')) el.classList.remove('hover-open');
+      });
+    });
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
   }
 
   const idGuardado = localStorage.getItem('zonaSeleccionada');
@@ -94,7 +112,7 @@ componentDidMount() {
         text: `La zona "${formValues.nombreZona}" se agregó correctamente`
       });
 
-      this.props.cargarZonas(); // refresca la lista
+      this.props.cargarZonas();
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'No se pudo agregar la zona', 'error');
@@ -144,7 +162,6 @@ componentDidMount() {
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
           <a className="sidebar-brand brand-logo" href="index.html"><img src={require("../../assets/images/a.png")} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../../assets/images/logo-mini.svg")} alt="logo" /></a>
         </div>
 
         <ul className="nav">
@@ -167,7 +184,7 @@ componentDidMount() {
             </div>
           </li>
 
-          {/* Inicio */}
+          {/* Home */}
           <li className={ this.isPathActive('/home') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/homeee/home">
               <i className="mdi mdi-home menu-icon"></i>
@@ -235,7 +252,6 @@ componentDidMount() {
               </ul>
             </Collapse>
           </li>
-
           {/* Pedidos */}
           <li className={ this.isPathActive('/orderPage') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.ordersMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={() => this.toggleMenuState('ordersMenuOpen')}>

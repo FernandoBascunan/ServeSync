@@ -1,7 +1,10 @@
 # PROYECTO DE TÍTULO: SERVESYNC 
+<<<<<<< HEAD
 ## Integrantes
 ### Fernando Bascuñán
 ### Felipe Engels
+=======
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 
 Página web de gestión de inventario, manejo de pedidos y predicción de stock con ayuda de inteligencia artificial
 
@@ -38,11 +41,17 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 
 1. Inicia XAMPP y habilita MySQL
 2. Crea 3 bases de datos con los siguientes nombres: 
+<<<<<<< HEAD
 ```
        - `servesync_users` → MS-Users
        - `servesync_storage` → MS-Inventario
        - `servesync_tables` → MS-Mesas
 ```
+=======
+        - `servesync_users` → MS-Users
+        - `servesync_storage` → MS-Inventario
+        - `servesync_tables` → MS-Mesas
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 3. No es necesario importar ningún script — las tablas se crearán automáticamente cuando el backend se inicie.
 
 ### 3. Instalar dependencias
@@ -50,17 +59,28 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 1. Backend (Spring Boot)
 Cada microservicio Java descarga automáticamente sus dependencias con Maven:
 ```bash
+<<<<<<< HEAD
 cd MS-Inventario
 .\mvnw.cmd clean install
 ```
 Haz lo mismo para MS-Mesas, MS-Users y Gateway.
+=======
+cd Back\MS-Inventario
+.\mvnw.cmd clean install
+```
+Haz lo mismo para Back\MS-Mesas, Back\MS-Users y Back\Gateway.
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 
 2. Microservicio de IA (MS-Prophet – FastAPI)
 Instala las dependencias de Python:
 ```bash
 cd MS-Prophet
 python -m venv .venv
+<<<<<<< HEAD
 .\.venv\Scripts\activate
+=======
+.\.venv\Scripts\activate (Windows por defecto bloquea la activacion de scripts anonimos, debes permitir la activacion en el PowerShell de windows.)
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 pip install -r requirements.txt
 ```
 3. Frontend (React)
@@ -88,7 +108,11 @@ cd Gateway
 .\mvnw.cmd spring-boot:run
 
 # Terminal 2
+<<<<<<< HEAD
 cd MS-Prophet 
+=======
+cd MS-Prophet(Recuerda tener el script activado para usar uvicorn) 
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 uvicorn main:app --reload
 
 # Terminal 3
@@ -202,10 +226,18 @@ Una vez en la página web puedes crear tu usuario desde 0 y acceder a las funcio
 #### 1. Gestión de Inventario
 - Agregar, editar y eliminar productos
 - Control de stock en tiempo real
+<<<<<<< HEAD
+=======
+- Alertas de stock bajo
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 
 #### 2. Gestión de Mesas y Pedidos
 - Visualización del estado de mesas
 - Creación y seguimiento de pedidos
+<<<<<<< HEAD
+=======
+- Asignación de meseros
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 
 #### 3. Predicción de Demanda (IA)
 - Análisis histórico de ventas
@@ -231,6 +263,10 @@ Una vez en la página web puedes crear tu usuario desde 0 y acceder a las funcio
 - **React 18**: Librería de UI
 - **React Router**: Navegación
 - **Axios**: Cliente HTTP
+<<<<<<< HEAD
+=======
+- **Tailwind CSS / Material-UI**: Estilos (especifica cuál usas)
+>>>>>>> 3aa2cef423643da6214de1c2c8ea48156f42cd72
 
 ### Base de Datos
 - **MySQL 8.0**: Base de datos relacional
