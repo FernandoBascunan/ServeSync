@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter  } from 'react-router-dom';
+import { Link  } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 
 export class Login extends Component {
@@ -10,7 +10,6 @@ export class Login extends Component {
       loading: false,
       error: '',
       success: '',
-      rememberMe: false
     };
   }
 
@@ -46,10 +45,6 @@ handleInputChange = (e) => {
     error: ''
   }));
 };
-
-  handleRememberMeChange = (e) => {
-    this.setState({ rememberMe: e.target.checked });
-  };
 
   handleSubmit = async (e) => {
   e.preventDefault();
@@ -89,8 +84,6 @@ handleInputChange = (e) => {
         localStorage.setItem('username', result.username);
       }
 
-      if (this.state.rememberMe) localStorage.setItem('rememberMe', 'true');
-
       this.setState({ success: `¡Bienvenido ${result.username || ''}!`, loading: false });
 
       setTimeout(() => this.props.history.push('/homeee/Home'), 1500);
@@ -103,7 +96,7 @@ handleInputChange = (e) => {
 };
 
   render() {
-    const { formData, loading, error, success, rememberMe } = this.state;
+    const { formData, loading, error, success } = this.state;
 
     return (
       <div>

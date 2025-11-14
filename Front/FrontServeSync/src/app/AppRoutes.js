@@ -1,6 +1,7 @@
 import React, { Component,Suspense, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+import Spinner from '../app/shared/Spinner';
 
 const Home = lazy(() => import('./homeee/Home'));
 
