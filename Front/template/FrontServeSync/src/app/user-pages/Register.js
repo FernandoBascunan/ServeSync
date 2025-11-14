@@ -101,10 +101,13 @@ export class Register extends Component {
         const errorData = await response.json().catch(() => ({ message: 'Error del servidor' }));
         throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
       }
+<<<<<<< Updated upstream:Front/template/FrontServeSync/src/app/user-pages/Register.js
 
       const result = await response.json();
       console.log('Usuario registrado exitosamente:', result);
 
+=======
+>>>>>>> Stashed changes:Front/FrontServeSync/src/app/user-pages/Register.js
       this.setState({
         success: '¡Usuario registrado exitosamente! Redirigiendo al login...',
         loading: false
@@ -115,10 +118,6 @@ export class Register extends Component {
 
     } catch (error) {
       console.error('Error en el registro:', error);
-      let errorMessage = 'Error de conexión. Verifica que el backend esté ejecutándose y CORS esté configurado correctamente.';
-      if (error.message && !error.message.includes('Failed to fetch')) {
-        errorMessage = error.message;
-      }
       this.setState({
         error: "Credenciales invalidas o ya existentes",
         loading: false
