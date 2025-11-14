@@ -212,7 +212,30 @@ Una vez iniciados todos los servicios, accede a:
 - **Aplicación web**: http://localhost:3000
 
 ### Credenciales
-Una vez en la página web puedes crear tu usuario desde 0 y acceder a las funcionalidades de esta
+
+Si deseas probar el proyecto de inmediato, sigue estos pasos:
+
+1. Regístrate en la aplicación web y asegúrate de que el usuario creado tenga id = 1
+(Este usuario será considerado como la empresa principal para cargar los datos de ejemplo.)
+
+2. Una vez creado el usuario, pobla la base de datos ejecutando los siguientes archivos SQL:
+```
+       a. Productos.sql
+       Inserta el inventario completo (productos, categorías, precios y stock)
+
+       b. ventas_historicas.sql
+       Genera un historial realista de ventas para habilitar las funciones del modelo de predicción Prophet.
+```
+3. Ejecuta ambos scripts en la base de datos servesync_storage.
+
+Una vez completado, tendrás:
+✔ Inventario cargado
+
+✔ Ventas históricas disponibles
+
+✔ Funcionalidad del modelo Prophet lista para usar
+
+✔ Plataforma totalmente operativa para pruebas
 
 ### Funcionalidades principales
 
