@@ -102,10 +102,13 @@ export class Register extends Component {
         throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
       }
 <<<<<<< Updated upstream:Front/template/FrontServeSync/src/app/user-pages/Register.js
+<<<<<<< Updated upstream:Front/template/FrontServeSync/src/app/user-pages/Register.js
 
       const result = await response.json();
       console.log('Usuario registrado exitosamente:', result);
 
+=======
+>>>>>>> Stashed changes:Front/FrontServeSync/src/app/user-pages/Register.js
 =======
 >>>>>>> Stashed changes:Front/FrontServeSync/src/app/user-pages/Register.js
       this.setState({
