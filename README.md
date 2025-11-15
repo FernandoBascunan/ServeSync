@@ -21,7 +21,7 @@ Página web de gestión de inventario, manejo de pedidos y predicción de stock 
 - Python 3.8 o superior 
 - Java 21 o superior
 - MySQL 8.0 o superior
-- Node.js 18 o superior
+- Node.js 16
 - Maven 3.9 o superior
 - npm 9 o superior
 - XAMPP
